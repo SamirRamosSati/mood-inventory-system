@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Mood Home Interiors - Inventory System",
   description: "Inventory management system for Mood Home Interiors",
+  icons: {
+    icon: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({

@@ -20,7 +20,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserSession["user"] | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
   const router = useRouter();
+  const supabase = createClient();
 
   const refreshSession = async () => {
     try {
@@ -46,8 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     refreshSession();
 
-    // Listen for auth changes
-    const supabase = createClient();
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(() => {
@@ -55,10 +55,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -75,11 +77,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(data.data.user);
       setIsAdmin(data.data.isAdmin);
 
-      router.push("/dashboard");
+      router.push(data.data.isAdmin ? "/admin/dashboard" : "/client/dashboard");
       router.refresh();
     } catch (error) {
+      console.error("Login error:", error);
+    } finally {
       setIsLoading(false);
-      throw error;
     }
   };
 

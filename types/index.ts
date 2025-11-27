@@ -60,3 +60,11 @@ export interface UserSession {
   user: UserWithoutSensitive;
   isAdmin: boolean;
 }
+
+export interface LowStockProduct {
+  id: string | number;
+  name: string;
+  sku: string;
+  category: string | null;
+  stock: number;
+}

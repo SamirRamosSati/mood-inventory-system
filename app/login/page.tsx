@@ -33,7 +33,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-row h-screen w-screen bg-white p-0 md:p-7">
-      {/* Left side - Logo */}
       <div className="hidden w-[50vw] h-full bg-[#DFCDC1] rounded-none md:rounded-2xl md:flex justify-center items-center">
         <Image
           src="/images/logo.png"
@@ -44,14 +43,12 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Right side - Login Form */}
       <div className="w-full md:w-[50vw] h-full flex flex-col items-center justify-center">
         <div className="w-full px-8 md:w-3/5 md:px-0">
           <h1 className="text-4xl text-black font-bold mb-2">Welcome</h1>
           <p className="text-gray-400 mb-8">Please login here</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            {/* Email Field */}
             <div>
               <label
                 htmlFor="email"
@@ -71,7 +68,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password Field */}
             <div>
               <label
                 htmlFor="password"

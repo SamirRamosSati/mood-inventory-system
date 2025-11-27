@@ -55,7 +55,7 @@ export default function AdminLayout({
         <Sidebar linkItems={sidebarLinkItems} />
       </div>
 
-      <main className="flex-1 p-8 overflow-y-auto bg-[#fafafa]">
+      <main className="flex-1 p-2 px-10 overflow-y-auto bg-[#fafafa]">
         <Navbar />
         {children}
       </main>

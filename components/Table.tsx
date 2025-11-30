@@ -3,6 +3,7 @@
 type Column = {
   key: string;
   label: string;
+  render?: (item: any) => React.ReactNode;
 };
 
 type TableProps = {
@@ -28,7 +29,7 @@ export default function Table({ columns, data }: TableProps) {
           <tr key={item.id} className="border-b hover:bg-gray-50 transition">
             {columns.map((col) => (
               <td key={col.key} className="p-3 text-sm text-gray-800">
-                {item[col.key]}
+                {col.render ? col.render(item) : item[col.key]}
               </td>
             ))}
           </tr>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin"; // ✅ Novo import
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { ApiResponse, UserSession } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -45,12 +45,11 @@ export async function POST(request: NextRequest) {
 
     console.log("📊 Fetching user from database...");
 
-    // ✅ Usar admin client para consultar o banco
     const adminClient = createAdminClient();
     const { data: user, error: userError } = await adminClient
       .from("users")
-      .select("id, email, name, role, createdAt, updatedAt")
-      .eq("authId", authData.user.id)
+      .select("id, email, name, role, created_at")
+      .eq("id", authData.user.id)
       .single();
 
     if (userError || !user) {

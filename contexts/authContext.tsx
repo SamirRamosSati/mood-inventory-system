@@ -9,7 +9,7 @@ interface AuthContextType {
   user: UserSession["user"] | null;
   isAdmin: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -36,8 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setIsAdmin(false);
       }
-    } catch (error) {
-      console.error("Error fetching session:", error);
+    } catch (err) {
+      console.error("Error fetching session:", err);
       setUser(null);
       setIsAdmin(false);
     } finally {
@@ -54,11 +54,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       refreshSession();
     });
 
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
 
     try {
@@ -71,16 +71,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (!data.success) {
-        throw new Error(data.error || "Login failed");
+        setUser(null);
+        setIsAdmin(false);
+        return false; // login falhou
       }
 
       setUser(data.data.user);
       setIsAdmin(data.data.isAdmin);
 
-      router.push(data.data.isAdmin ? "/admin/dashboard" : "/client/dashboard");
-      router.refresh();
-    } catch (error) {
-      console.error("Login error:", error);
+      router.push(data.data.isAdmin ? "/dashboard" : "/dashboard");
+      return true; // login sucesso
+    } catch (err) {
+      console.error("Login error:", err);
+      setUser(null);
+      setIsAdmin(false);
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -94,9 +99,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAdmin(false);
 
       router.push("/login");
-      router.refresh();
-    } catch (error) {
-      console.error("Error logging out:", error);
+    } catch (err) {
+      console.error("Error logging out:", err);
     }
   };
 

@@ -8,7 +8,16 @@ import Table from "@/components/Table";
 import Filters from "@/components/Filters";
 import Modal from "@/components/modal";
 import RowActions from "@/components/stockMovements/RowActions";
+import ProductForm from "@/components/products/productsForm";
+import PaginationControls from "@/components/paginationControl";
 import { Product, ApiResponse } from "@/types";
+
+interface ProductFormData {
+  name: string;
+  sku: string;
+  category: string | null;
+  brand: string | null;
+}
 
 export default function ProductsPage() {
   const [search, setSearch] = useState("");
@@ -92,21 +101,9 @@ export default function ProductsPage() {
     }
   }
 
-  async function handleSubmitProduct(form: HTMLFormElement) {
+  async function handleSubmitProduct(payload: ProductFormData) {
     setSaving(true);
     setError(null);
-
-    const payload = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value.trim(),
-      sku: (form.elements.namedItem("sku") as HTMLInputElement).value.trim(),
-      category:
-        (
-          form.elements.namedItem("category") as HTMLInputElement
-        ).value.trim() || null,
-      brand:
-        (form.elements.namedItem("brand") as HTMLInputElement).value.trim() ||
-        null,
-    };
 
     try {
       if (editingProduct) {
@@ -155,7 +152,6 @@ export default function ProductsPage() {
         err instanceof Error ? err.message : "Failed to save product";
       console.error("Save product error:", err);
       setError(message);
-      alert(`Error: ${message}`);
     } finally {
       setSaving(false);
     }
@@ -197,6 +193,15 @@ export default function ProductsPage() {
       ),
     },
   ];
+
+  const handleCancelModal = () => {
+    setIsModalOpen(false);
+    setEditingProduct(null);
+    setError(null);
+  };
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   return (
     <div className="p-2">
@@ -242,127 +247,27 @@ export default function ProductsPage() {
         ) : (
           <>
             <Table columns={columns} data={paginated} />
-
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
-                disabled={currentPage === 0}
-                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
-              >
-                ↑
-              </button>
-
-              <span className="text-sm text-gray-600">
-                Page {currentPage + 1} / {totalPages}
-              </span>
-
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages - 1, p + 1))
-                }
-                disabled={(currentPage + 1) * PAGE_SIZE >= filtered.length}
-                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
-              >
-                ↓
-              </button>
-            </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </>
         )}
       </Card>
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingProduct(null);
-        }}
+        onClose={handleCancelModal}
         title={editingProduct ? "Edit Product" : "Add New Product"}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            handleSubmitProduct(form);
-          }}
-          className="space-y-5"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Product Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              defaultValue={editingProduct?.name || ""}
-              required
-              className="w-full px-4 py-3 bg-gray-50 border placeholder:text-sm border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              SKU
-            </label>
-            <input
-              type="text"
-              name="sku"
-              defaultValue={editingProduct?.sku || ""}
-              required
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Category
-            </label>
-            <input
-              type="text"
-              name="category"
-              defaultValue={editingProduct?.category || ""}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Brand
-            </label>
-            <input
-              type="text"
-              name="brand"
-              defaultValue={editingProduct?.brand || ""}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-            />
-          </div>
-
-          <div className="flex gap-3 ml-auto">
-            <button
-              type="button"
-              onClick={() => {
-                setIsModalOpen(false);
-                setEditingProduct(null);
-              }}
-              className="px-6 py-3 rounded-xl font-medium text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-50 transition"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-6 py-3 rounded-xl font-medium text-white bg-[#DFCDC1] hover:bg-[#C8A893] transition disabled:opacity-60"
-            >
-              {saving
-                ? "Saving..."
-                : editingProduct
-                ? "Save Changes"
-                : "Add Product"}
-            </button>
-          </div>
-        </form>
-
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        <ProductForm
+          product={editingProduct}
+          onSubmit={handleSubmitProduct}
+          onCancel={handleCancelModal}
+          saving={saving}
+          error={error}
+        />
       </Modal>
     </div>
   );

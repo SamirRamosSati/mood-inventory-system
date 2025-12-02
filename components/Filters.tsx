@@ -2,7 +2,7 @@
 
 export interface FilterOption {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 interface FiltersProps {

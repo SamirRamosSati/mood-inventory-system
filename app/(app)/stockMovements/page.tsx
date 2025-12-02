@@ -7,45 +7,17 @@ import Modal from "@/components/modal";
 import CustomTabs from "@/components/stockMovements/customTabs";
 import RowActions from "@/components/stockMovements/RowActions";
 import StockMovementForm from "@/components/stockMovements/stockMovement-form";
-import Filters, { FilterOption } from "@/components/Filters";
+import Filters from "@/components/Filters";
+import PaginationControls from "@/components/paginationControl";
 import { MovementWithRelations, TableColumn, ApiResponse } from "@/types";
+import {
+  MOVEMENT_COLUMNS_MAP,
+  MONTH_FILTER_OPTIONS,
+} from "@/config/stockMovementConfig";
 
 const movementTypes = ["ARRIVAL", "PICKUP", "DELIVERY"] as const;
 
 type Col = TableColumn<MovementWithRelations>;
-
-const movementColumnsMap: Record<string, Col[]> = {
-  ARRIVAL: [
-    { key: "order", label: "Order" },
-    { key: "bol", label: "BOL" },
-    { key: "productName", label: "Product" },
-    { key: "quantity", label: "Qty" },
-    { key: "userName", label: "User" },
-    { key: "arrivalDate", label: "Arrival Date" },
-    { key: "notes", label: "Notes" },
-    { key: "actions", label: "" },
-  ],
-  PICKUP: [
-    { key: "order", label: "Order" },
-    { key: "productName", label: "Product" },
-    { key: "quantity", label: "Qty" },
-    { key: "userName", label: "User" },
-    { key: "pickupBy", label: "Pick Up By" },
-    { key: "pickupDate", label: "Pick Up Date" },
-    { key: "notes", label: "Notes" },
-    { key: "actions", label: "" },
-  ],
-  DELIVERY: [
-    { key: "order", label: "Order" },
-    { key: "productName", label: "Product" },
-    { key: "quantity", label: "Qty" },
-    { key: "userName", label: "User" },
-    { key: "deliveryCompany", label: "Delivery Company" },
-    { key: "deliveryDate", label: "Delivery Date" },
-    { key: "notes", label: "Notes" },
-    { key: "actions", label: "" },
-  ],
-};
 
 function formatDate(value: string | undefined | null) {
   if (!value) return "";
@@ -74,21 +46,6 @@ function getMovementDate(movement: MovementWithRelations): string | null {
       return null;
   }
 }
-
-const monthOptions: FilterOption[] = [
-  { label: "January", value: "01" },
-  { label: "February", value: "02" },
-  { label: "March", value: "03" },
-  { label: "April", value: "04" },
-  { label: "May", value: "05" },
-  { label: "June", value: "06" },
-  { label: "July", value: "07" },
-  { label: "August", value: "08" },
-  { label: "September", value: "09" },
-  { label: "October", value: "10" },
-  { label: "November", value: "11" },
-  { label: "December", value: "12" },
-];
 
 export default function StockMovementsPage() {
   const [movements, setMovements] = useState<MovementWithRelations[]>([]);
@@ -231,6 +188,13 @@ export default function StockMovementsPage() {
     const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
+    const handleTabPageChange = (newPage: number) => {
+      setPageByType((prev) => ({
+        ...prev,
+        [type]: newPage,
+      }));
+    };
+
     return {
       value: type,
       label: type,
@@ -238,7 +202,7 @@ export default function StockMovementsPage() {
         <>
           <Table<Record<string, unknown>>
             columns={
-              movementColumnsMap[type].map((col) => ({
+              MOVEMENT_COLUMNS_MAP[type].map((col) => ({
                 ...col,
                 render:
                   col.render ??
@@ -281,37 +245,11 @@ export default function StockMovementsPage() {
             }))}
           />
 
-          <div className="flex items-center justify-center gap-4 mt-4">
-            <button
-              onClick={() =>
-                setPageByType((prev) => ({
-                  ...prev,
-                  [type]: Math.max(0, page - 1),
-                }))
-              }
-              disabled={page === 0}
-              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
-            >
-              ↑
-            </button>
-
-            <span className="text-sm text-gray-600">
-              Page {page + 1} / {totalPages}
-            </span>
-
-            <button
-              onClick={() =>
-                setPageByType((prev) => ({
-                  ...prev,
-                  [type]: Math.min(totalPages - 1, page + 1),
-                }))
-              }
-              disabled={page + 1 >= totalPages}
-              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
-            >
-              ↓
-            </button>
-          </div>
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handleTabPageChange}
+          />
         </>
       ),
       isLoading,
@@ -333,7 +271,7 @@ export default function StockMovementsPage() {
             },
           },
           {
-            options: monthOptions,
+            options: MONTH_FILTER_OPTIONS,
             selected: selectedMonth,
             placeholder: "Select Month",
             onChange: (value) => {

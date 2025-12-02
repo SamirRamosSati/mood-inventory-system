@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import Sidebar, { SidebarLinkItem } from "@/components/admin/layout/sideBar";
-import Navbar from "@/components/admin/layout/navBar";
+import Sidebar, { SidebarLinkItem } from "@/components/layout/sideBar";
+import Navbar from "@/components/layout/navBar";
 import { useAuth } from "@/contexts/authContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useRouter } from "next/navigation";

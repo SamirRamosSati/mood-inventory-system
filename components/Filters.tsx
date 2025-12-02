@@ -1,6 +1,6 @@
 "use client";
 
-interface FilterOption {
+export interface FilterOption {
   label: string;
   value: string;
 }

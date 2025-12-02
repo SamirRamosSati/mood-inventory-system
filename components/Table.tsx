@@ -1,23 +1,25 @@
 "use client";
 
-type Column = {
-  key: string;
-  label: string;
-  render?: (item: any) => React.ReactNode;
-};
+import { TableColumn } from "@/types";
 
-type TableProps = {
-  columns: Column[];
-  data: any[];
-};
+interface TableProps<T extends Record<string, unknown>> {
+  columns: TableColumn<T>[];
+  data: T[];
+}
 
-export default function Table({ columns, data }: TableProps) {
+export default function Table<T extends Record<string, unknown>>({
+  columns,
+  data,
+}: TableProps<T>) {
   return (
     <table className="w-full text-left border-collapse">
       <thead>
         <tr className="border-b">
           {columns.map((col) => (
-            <th key={col.key} className="p-3 text-sm font-semibold text-black">
+            <th
+              key={String(col.key)}
+              className="p-3 text-sm font-semibold text-black"
+            >
               {col.label}
             </th>
           ))}
@@ -26,10 +28,13 @@ export default function Table({ columns, data }: TableProps) {
 
       <tbody>
         {data.map((item) => (
-          <tr key={item.id} className="border-b hover:bg-gray-50 transition">
+          <tr
+            key={String(item.id)}
+            className="border-b hover:bg-gray-50 transition"
+          >
             {columns.map((col) => (
-              <td key={col.key} className="p-3 text-sm text-gray-800">
-                {col.render ? col.render(item) : item[col.key]}
+              <td key={String(col.key)} className="p-3 text-sm text-gray-800">
+                {col.render ? col.render(item) : String(item[col.key] ?? "")}
               </td>
             ))}
           </tr>

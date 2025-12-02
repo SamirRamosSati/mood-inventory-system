@@ -47,7 +47,7 @@ export default function CustomTabs({
         {rightElement}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-[80px]">
+      <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1">
         {tabs.map((t) => {
           const isActive = tab === t.value;
 
@@ -62,7 +62,7 @@ export default function CustomTabs({
                 <p className="text-center py-8 text-gray-400">Loading...</p>
               ) : t.dataLength === 0 ? (
                 <p className="text-center py-8 text-gray-400">
-                  No products to fetch
+                  No movements to fetch
                 </p>
               ) : (
                 t.content

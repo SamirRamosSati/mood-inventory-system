@@ -3,20 +3,37 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { MovementWithRelations, MovementFormData, MovementType } from "@/types";
+
 interface StockMovementFormProps {
-  movement?: any;
-  onSubmit: (movement: any) => void;
+  movement?: MovementWithRelations | null;
+  onSubmit: (movement: MovementFormData) => void;
   onCancel: () => void;
 }
 
-const movementTypes = ["ARRIVAL", "PICKUP", "DELIVERY"];
+const movementTypes: MovementType[] = [
+  MovementType.ARRIVAL,
+  MovementType.PICKUP,
+  MovementType.DELIVERY,
+];
 
 export default function StockMovementForm({
   movement,
   onSubmit,
   onCancel,
 }: StockMovementFormProps) {
-  const [type, setType] = useState(movement?.type || movementTypes[0]);
+  const formatDate = (d?: string | Date | null) => {
+    if (!d) return "";
+    try {
+      if (typeof d === "string") return d.split("T")[0];
+      return d.toISOString().split("T")[0];
+    } catch {
+      return "";
+    }
+  };
+  const [type, setType] = useState<MovementType>(
+    (movement?.type as MovementType) ?? movementTypes[0]
+  );
   const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<{
@@ -28,7 +45,6 @@ export default function StockMovementForm({
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 Fechar dropdown ao clicar fora
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -42,7 +58,6 @@ export default function StockMovementForm({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🔹 Carregar produtos
   useEffect(() => {
     async function loadProducts() {
       setIsLoadingProducts(true);
@@ -59,7 +74,6 @@ export default function StockMovementForm({
     loadProducts();
   }, []);
 
-  // 🔹 Preencher campos se estiver editando
   useEffect(() => {
     if (movement?.type) setType(movement.type);
     if (movement?.productId && movement?.productName) {
@@ -68,6 +82,12 @@ export default function StockMovementForm({
         name: movement.productName,
       });
       setSearch(movement.productName);
+    } else if (movement?.product?.id && movement?.product?.name) {
+      setSelectedProduct({
+        id: movement.product.id,
+        name: movement.product.name,
+      });
+      setSearch(movement.product.name);
     }
   }, [movement]);
 
@@ -90,7 +110,7 @@ export default function StockMovementForm({
     };
 
     onSubmit({
-      productId: selectedProduct.id, // ✅ só enviamos o ID
+      productId: selectedProduct.id,
       type,
       quantity: parseInt(form.quantity.value),
       notes: form.notes.value,
@@ -107,7 +127,6 @@ export default function StockMovementForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Product */}
       <div ref={wrapperRef}>
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Product
@@ -165,7 +184,6 @@ export default function StockMovementForm({
         )}
       </div>
 
-      {/* Type */}
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Type
@@ -174,7 +192,7 @@ export default function StockMovementForm({
           name="type"
           required
           value={type}
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => setType(e.target.value as MovementType)}
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
         >
           {movementTypes.map((t) => (
@@ -185,7 +203,6 @@ export default function StockMovementForm({
         </select>
       </div>
 
-      {/* Quantity */}
       <div>
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Quantity
@@ -199,8 +216,7 @@ export default function StockMovementForm({
         />
       </div>
 
-      {/* Campos dinâmicos */}
-      {type === "ARRIVAL" && (
+      {type === MovementType.ARRIVAL && (
         <>
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -210,7 +226,7 @@ export default function StockMovementForm({
               type="date"
               name="arrivalDate"
               required
-              defaultValue={movement?.arrivalDate || ""}
+              defaultValue={formatDate(movement?.arrivalDate)}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>
@@ -239,7 +255,7 @@ export default function StockMovementForm({
         </>
       )}
 
-      {type === "DELIVERY" && (
+      {type === MovementType.DELIVERY && (
         <>
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -261,7 +277,7 @@ export default function StockMovementForm({
               type="date"
               name="deliveryDate"
               required
-              defaultValue={movement?.deliveryDate || ""}
+              defaultValue={formatDate(movement?.deliveryDate)}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>
@@ -280,7 +296,7 @@ export default function StockMovementForm({
         </>
       )}
 
-      {type === "PICKUP" && (
+      {type === MovementType.PICKUP && (
         <>
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -302,19 +318,7 @@ export default function StockMovementForm({
               type="date"
               name="pickupDate"
               required
-              defaultValue={movement?.pickupDate || ""}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              SKU
-            </label>
-            <input
-              type="text"
-              name="sku"
-              required
-              defaultValue={movement?.sku || ""}
+              defaultValue={formatDate(movement?.pickupDate)}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>

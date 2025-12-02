@@ -1,14 +1,23 @@
-import {
-  User as PrismaUser,
-  UserRole,
-  Product,
-  Movement,
-  MovementType,
-} from "@prisma/client";
+export enum UserRole {
+  ADMIN = "ADMIN",
+  EMPLOYEE = "EMPLOYEE",
+}
 
-export type User = PrismaUser;
+export enum MovementType {
+  ARRIVAL = "ARRIVAL",
+  PICKUP = "PICKUP",
+  DELIVERY = "DELIVERY",
+}
 
-export type UserWithoutSensitive = Omit<User, "authId">;
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  created_at: string;
+}
+
+export type UserWithoutSensitive = Omit<User, "id">;
 
 export interface LoginCredentials {
   email: string;
@@ -22,7 +31,22 @@ export interface CreateUserData {
   role: UserRole;
 }
 
-export type { Product };
+export interface UserSession {
+  user: UserWithoutSensitive;
+  isAdmin: boolean;
+}
+
+export interface Product extends Record<string, unknown> {
+  id: string;
+  name: string;
+  sku: string;
+  description?: string | null;
+  category?: string | null;
+  brand?: string | null;
+  stock: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface CreateProductData {
   name: string;
@@ -37,7 +61,33 @@ export interface UpdateProductData {
   category?: string;
 }
 
-export type { Movement, MovementType };
+export interface ProductFormData {
+  name: string;
+  sku: string;
+  category?: string | null;
+  brand?: string | null;
+}
+
+// Movement type
+export interface Movement extends Record<string, unknown> {
+  id: string;
+  productId: string;
+  userId: string;
+  type: MovementType;
+  quantity: number;
+  notes?: string | null;
+  customerName?: string | null;
+  deliveryAddress?: string | null;
+  deliveryDate?: string | null;
+  arrivalDate?: string | null;
+  order?: string | null;
+  bol?: string | null;
+  pickupBy?: string | null;
+  pickupDate?: string | null;
+  deliveryCompany?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface CreateMovementData {
   productId: string;
@@ -49,16 +99,44 @@ export interface CreateMovementData {
   deliveryDate?: Date;
 }
 
+export interface MovementFormData {
+  productId: string;
+  type: MovementType;
+  quantity: number;
+  notes?: string;
+  arrivalDate?: string;
+  order?: string;
+  bol?: string;
+  pickupBy?: string;
+  pickupDate?: string;
+  deliveryCompany?: string;
+  deliveryDate?: string;
+  sku?: string;
+  customerName?: string;
+}
+
+export interface MovementWithRelations extends Movement {
+  product?: Product;
+  user?: User & Record<string, unknown>;
+  productName?: string;
+  userName?: string;
+}
+
+export interface RecentMovement {
+  id: string | number;
+  type: MovementType;
+  product: string;
+  quantity: number;
+  time: string;
+  vendor?: string;
+  customer?: string;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
   message?: string;
-}
-
-export interface UserSession {
-  user: UserWithoutSensitive;
-  isAdmin: boolean;
 }
 
 export interface LowStockProduct {
@@ -67,4 +145,58 @@ export interface LowStockProduct {
   sku: string;
   category: string | null;
   stock: number;
+}
+
+export interface TableColumn<T> {
+  key: keyof T | string;
+  label: string;
+  render?: (item: T) => React.ReactNode;
+}
+
+export interface FilterOption {
+  label: string;
+  value: string | number;
+}
+
+export interface AppError extends Error {
+  statusCode?: number;
+  message: string;
+}
+
+export interface ProductFormData {
+  name: string;
+  sku: string;
+  category?: string | null;
+  brand?: string | null;
+}
+
+export interface MovementFormData {
+  productId: string;
+  type: MovementType;
+  quantity: number;
+  notes?: string;
+  arrivalDate?: string;
+  order?: string;
+  bol?: string;
+  pickupBy?: string;
+  pickupDate?: string;
+  deliveryCompany?: string;
+  deliveryDate?: string;
+  sku?: string;
+  customerName?: string;
+}
+
+export interface RecentMovement {
+  id: string | number;
+  type: MovementType;
+  product: string;
+  quantity: number;
+  time: string;
+  vendor?: string;
+  customer?: string;
+}
+
+export interface AppError extends Error {
+  statusCode?: number;
+  message: string;
 }

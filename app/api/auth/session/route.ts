@@ -35,7 +35,7 @@ export async function GET() {
 
     const sessionData: UserSession = {
       user,
-      isAdmin: user.role === "Admin",
+      isAdmin: String(user.role || "").toLowerCase() === "admin",
     };
 
     return NextResponse.json<ApiResponse<UserSession>>(

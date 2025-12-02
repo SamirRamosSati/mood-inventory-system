@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     const sessionData: UserSession = {
       user,
-      isAdmin: user.role === "ADMIN",
+      isAdmin: String(user.role || "").toLowerCase() === "admin",
     };
 
     console.log("✅ Login successful:", user.email);

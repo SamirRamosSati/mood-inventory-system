@@ -22,7 +22,6 @@ export default function Navbar() {
     <nav className="bg-[#fafafa] ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Left side - Greeting */}
           <div>
             <h1 className="text-xl font-bold text-gray-900">
               Hello {user?.name?.split(" ")[0]}
@@ -30,9 +29,7 @@ export default function Navbar() {
             <p className="text-xs text-gray-500">{getGreeting()}</p>
           </div>
 
-          {/* Right side - Notifications & User Menu */}
           <div className="flex items-center gap-4">
-            {/* Notifications */}
             <button className="p-2 hover:bg-gray-100 rounded-lg transition">
               <svg
                 className="w-6 h-6 text-gray-700"
@@ -49,30 +46,26 @@ export default function Navbar() {
               </svg>
             </button>
 
-            {/* User Menu */}
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center gap-3 hover:bg-gray-100 rounded-lg p-2 transition"
               >
                 <div className="flex items-center gap-3">
-                  {/* Avatar */}
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
 
-                  {/* User Info */}
                   <div className="text-left hidden sm:block">
                     <p className="text-sm font-semibold text-gray-900">
                       {user?.name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {isAdmin ? "Store Manager" : "Employee"}
+                      {isAdmin ? "Manager" : "Employee"}
                     </p>
                   </div>
                 </div>
 
-                {/* Dropdown Arrow */}
                 <svg
                   className={`w-4 h-4 text-gray-500 transition-transform ${
                     isDropdownOpen ? "rotate-180" : ""

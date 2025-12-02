@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { FilePenLine } from "lucide-react";
 
-export default function ActionButton({ onEdit, onDelete }: any) {
-  const [isOpen, setIsOpen] = useState(false);
+interface ActionButtonProps {
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
 
+export default function ActionButton({ onEdit }: ActionButtonProps) {
   return (
-    <button onClick={() => setIsOpen(true)}>
+    <button onClick={() => onEdit?.()} aria-label="action">
       <span>
         <FilePenLine size={20} />
       </span>

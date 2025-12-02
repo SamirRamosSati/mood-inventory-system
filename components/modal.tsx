@@ -49,7 +49,7 @@ export default function Modal({
             )}
             <button
               onClick={onClose}
-              className="ml-auto w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
+              className="ml-auto w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
               aria-label="Close modal"
             >
               <svg
@@ -69,7 +69,7 @@ export default function Modal({
           </div>
         </div>
 
-        <div className="px-8 py-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+        <div className="px-8 py-6 overflow-y-auto max-h-[calc(90vh-140px)] text-gray-900">
           {children}
         </div>
       </div>

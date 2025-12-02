@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 export interface Movement {
-  id: number;
+  id: string | number;
   type: string;
   product: string;
   quantity: number;
@@ -87,7 +87,7 @@ export function RecentMovements({
 
         <div className="p-4 bg-gray-50 border-t border-gray-200">
           <button
-            onClick={() => router.push("/admin/products")}
+            onClick={() => router.push("/stockMovements")}
             className="text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
             View all movements →

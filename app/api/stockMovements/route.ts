@@ -46,9 +46,9 @@ async function validateMovement(body: MovementBody) {
 
   if (
     type === "PICKUP" &&
-    (!body.pickupBy || !body.pickupDate || !body.order || !body.sku)
+    (!body.pickupBy || !body.pickupDate || !body.order)
   ) {
-    return "pickupBy, pickupDate, order and sku are required for PICKUP";
+    return "pickupBy, pickupDate and order are required for PICKUP";
   }
 
   return null;
@@ -92,18 +92,36 @@ export async function GET(request: NextRequest) {
 
     let query = admin
       .from("movements")
-      .select("*")
+      .select(`*, product:products(*), user:users(*)`)
       .order("createdAt", { ascending: false });
     if (productId) query = query.eq("productId", productId);
 
     const { data, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json({ success: true, data });
-  } catch (err: any) {
+    const normalized = (data || []).map((m: Record<string, unknown>) => ({
+      ...m,
+      productName:
+        (m.product && typeof m.product === "object" && "name" in m.product
+          ? (m.product as { name?: string }).name
+          : undefined) ??
+        m.productName ??
+        "",
+      userName:
+        (m.user && typeof m.user === "object" && "name" in m.user
+          ? (m.user as { name?: string }).name
+          : undefined) ??
+        m.userName ??
+        "",
+    }));
+
+    return NextResponse.json({ success: true, data: normalized });
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal server error";
     console.error("GET stock movements error:", err);
     return NextResponse.json(
-      { success: false, error: err.message || "Internal server error" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
@@ -129,10 +147,8 @@ export async function POST(request: NextRequest) {
     if (body.type === "DELIVERY" || body.type === "PICKUP")
       adjustment = -body.quantity;
 
-    // Atualizar o estoque do produto
     await updateProductStock(admin, body.productId, adjustment);
 
-    // Inserir movimento de estoque
     const { data: movement, error: movErr } = await admin
       .from("movements")
       .insert({ ...body, userId: user.id })
@@ -140,21 +156,18 @@ export async function POST(request: NextRequest) {
       .single();
     if (movErr) throw movErr;
 
-    // Obter o nome do produto
     const { data: product } = await admin
       .from("products")
       .select("name")
       .eq("id", body.productId)
       .single();
 
-    // Obter o nome do usuário
     const { data: userData } = await admin
       .from("users")
       .select("name")
       .eq("id", user.id)
       .single();
 
-    // Retornar o movimento com o nome do produto e do usuário
     return NextResponse.json(
       {
         success: true,
@@ -166,15 +179,16 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal server error";
     console.error("POST stock movement error:", err);
     return NextResponse.json(
-      { success: false, error: err.message || "Internal server error" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
 }
-
 export async function PUT(request: NextRequest) {
   try {
     const { user, response } = await requireUser();
@@ -225,7 +239,35 @@ export async function PUT(request: NextRequest) {
 
     const { data: updated, error: updErr } = await admin
       .from("movements")
-      .update(fields)
+      .update(
+        ((): Record<string, unknown> => {
+          const allowed = [
+            "productId",
+            "type",
+            "quantity",
+            "notes",
+            "arrivalDate",
+            "deliveryDate",
+            "deliveryCompany",
+            "order",
+            "pickupBy",
+            "pickupDate",
+            "vendor",
+            "customerName",
+            "location",
+            "bol",
+            "sku",
+          ];
+          const out: Record<string, unknown> = {};
+          Object.entries(fields as Record<string, unknown>).forEach(
+            ([k, v]) => {
+              if (allowed.includes(k)) out[k] = v;
+            }
+          );
+          console.debug("PUT /api/stockMovements - update payload:", out);
+          return out;
+        })()
+      )
       .eq("id", id)
       .select()
       .single();
@@ -251,10 +293,12 @@ export async function PUT(request: NextRequest) {
         userName: userData?.name || "",
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal server error";
     console.error("PUT stock movement error:", err);
     return NextResponse.json(
-      { success: false, error: err.message || "Internal server error" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
@@ -286,7 +330,6 @@ export async function DELETE(request: NextRequest) {
         { status: 404 }
       );
 
-    // Reverter estoque
     let adjustment = 0;
     if (existing.type === "ARRIVAL") adjustment = -existing.quantity;
     if (existing.type === "DELIVERY" || existing.type === "PICKUP")
@@ -301,10 +344,12 @@ export async function DELETE(request: NextRequest) {
     if (delErr) throw delErr;
 
     return NextResponse.json({ success: true, message: "Movement deleted" });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Internal server error";
     console.error("DELETE stock movement error:", err);
     return NextResponse.json(
-      { success: false, error: err.message || "Internal server error" },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

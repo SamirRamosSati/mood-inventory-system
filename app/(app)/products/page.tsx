@@ -1,4 +1,3 @@
-// pages/admin/products.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,25 +7,23 @@ import AddButton from "@/components/AddButton";
 import Table from "@/components/Table";
 import Filters from "@/components/Filters";
 import Modal from "@/components/modal";
-import RowActions from "@/components/admin/stockMovements/RowActions";
+import RowActions from "@/components/stockMovements/RowActions";
+import { Product, ApiResponse } from "@/types";
 
 export default function ProductsPage() {
-  // UI / filter states
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
 
-  // modal + editing
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // data / loading / error
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch products on mount
   useEffect(() => {
     let cancelled = false;
 
@@ -36,16 +33,16 @@ export default function ProductsPage() {
       try {
         const res = await fetch("/api/products");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
+        const json: ApiResponse<Product[]> = await res.json();
         if (!cancelled) {
-          if (json.success && Array.isArray(json.data)) {
+          if (json.data && Array.isArray(json.data)) {
             setProducts(json.data);
           } else {
             setProducts([]);
-            setError("Failed to load products");
+            setError(json.error || "Failed to load products");
           }
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (!cancelled) {
           console.error("Failed to fetch products:", err);
           setError("Failed to fetch products");
@@ -62,17 +59,11 @@ export default function ProductsPage() {
     };
   }, []);
 
-  // handlers for UI
   function handleSearch(value: string) {
     setSearch(value);
   }
 
-  function handleOpenCreate() {
-    setEditingProduct(null);
-    setIsModalOpen(true);
-  }
-
-  function handleEditProduct(item: any) {
+  function handleEditProduct(item: Product) {
     setEditingProduct(item);
     setIsModalOpen(true);
   }
@@ -136,12 +127,10 @@ export default function ProductsPage() {
         const json = await res.json();
         if (!json.success) throw new Error(json.error || "Update failed");
 
-        // replace in local state
         setProducts((prev) =>
           prev.map((p) => (p.id === editingProduct.id ? json.data : p))
         );
       } else {
-        // CREATE
         const res = await fetch("/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -156,23 +145,22 @@ export default function ProductsPage() {
         const json = await res.json();
         if (!json.success) throw new Error(json.error || "Create failed");
 
-        // append new product
         setProducts((prev) => [...prev, json.data]);
       }
 
-      // close modal and reset
       setIsModalOpen(false);
       setEditingProduct(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to save product";
       console.error("Save product error:", err);
-      setError(err?.message || "Failed to save product");
-      alert(`Error: ${err?.message || "Failed to save product"}`);
+      setError(message);
+      alert(`Error: ${message}`);
     } finally {
       setSaving(false);
     }
   }
 
-  // derived filter lists + filtered results
   const brands = [...new Set(products.map((p) => p.brand).filter(Boolean))];
   const categories = [
     ...new Set(products.map((p) => p.category).filter(Boolean)),
@@ -185,6 +173,13 @@ export default function ProductsPage() {
     return searchMatch && brandMatch && categoryMatch;
   });
 
+  const PAGE_SIZE = 7;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE
+  );
+
   const columns = [
     { key: "name", label: "Name" },
     { key: "sku", label: "SKU" },
@@ -194,7 +189,7 @@ export default function ProductsPage() {
     {
       key: "actions",
       label: "Actions",
-      render: (item: any) => (
+      render: (item: Product) => (
         <RowActions
           onEdit={() => handleEditProduct(item)}
           onDelete={() => handleDeleteProduct(item.id)}
@@ -212,13 +207,17 @@ export default function ProductsPage() {
             <Filters
               filters={[
                 {
-                  options: brands.map((b) => ({ label: b, value: b })),
+                  options: brands
+                    .filter((b): b is string => b !== null && b !== undefined)
+                    .map((b) => ({ label: b, value: b })),
                   selected: brand,
                   placeholder: "All brands",
                   onChange: setBrand,
                 },
                 {
-                  options: categories.map((c) => ({ label: c, value: c })),
+                  options: categories
+                    .filter((c): c is string => c !== null && c !== undefined)
+                    .map((c) => ({ label: c, value: c })),
                   selected: category,
                   placeholder: "All categories",
                   onChange: setCategory,
@@ -241,7 +240,33 @@ export default function ProductsPage() {
         ) : filtered.length === 0 ? (
           <p className="text-gray-400">No products found.</p>
         ) : (
-          <Table columns={columns} data={filtered} />
+          <>
+            <Table columns={columns} data={paginated} />
+
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
+                disabled={currentPage === 0}
+                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40"
+              >
+                ↑
+              </button>
+
+              <span className="text-sm text-gray-600">
+                Page {currentPage + 1} / {totalPages}
+              </span>
+
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages - 1, p + 1))
+                }
+                disabled={(currentPage + 1) * PAGE_SIZE >= filtered.length}
+                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40"
+              >
+                ↓
+              </button>
+            </div>
+          </>
         )}
       </Card>
 

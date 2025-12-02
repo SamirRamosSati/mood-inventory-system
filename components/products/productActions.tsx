@@ -2,7 +2,15 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 
-export default function ProductActions({ onEdit, onDelete }: any) {
+interface ProductActionsProps {
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export default function ProductActions({
+  onEdit,
+  onDelete,
+}: ProductActionsProps) {
   return (
     <div className="flex gap-3">
       <button

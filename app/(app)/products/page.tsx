@@ -204,42 +204,47 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-2">
-      <Card>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-10">
-            <SearchBar onSearch={handleSearch} />
-            <Filters
-              filters={[
-                {
-                  options: brands
-                    .filter((b): b is string => b !== null && b !== undefined)
-                    .map((b) => ({ label: b, value: b })),
-                  selected: brand,
-                  placeholder: "All brands",
-                  onChange: setBrand,
-                },
-                {
-                  options: categories
-                    .filter((c): c is string => c !== null && c !== undefined)
-                    .map((c) => ({ label: c, value: c })),
-                  selected: category,
-                  placeholder: "All categories",
-                  onChange: setCategory,
-                },
-              ]}
-            />
-          </div>
-
-          <AddButton
-            label="Add Product"
-            onClick={() => {
-              setEditingProduct(null);
-              setIsModalOpen(true);
-            }}
+    <div className="p-2 space-y-4">
+      {" "}
+      {/* Adicionado space-y-4 para separar a linha de filtros do Card */}
+      {/* 1. Elementos movidos para fora do Card */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {" "}
+          {/* Ajustado gap para consistência visual */}
+          <SearchBar onSearch={handleSearch} />
+          <Filters
+            filters={[
+              {
+                options: brands
+                  .filter((b): b is string => b !== null && b !== undefined)
+                  .map((b) => ({ label: b, value: b })),
+                selected: brand,
+                placeholder: "All brands",
+                onChange: setBrand,
+              },
+              {
+                options: categories
+                  .filter((c): c is string => c !== null && c !== undefined)
+                  .map((c) => ({ label: c, value: c })),
+                selected: category,
+                placeholder: "All categories",
+                onChange: setCategory,
+              },
+            ]}
           />
         </div>
 
+        <AddButton
+          label="Add Product"
+          onClick={() => {
+            setEditingProduct(null);
+            setIsModalOpen(true);
+          }}
+        />
+      </div>
+      {/* 2. Conteúdo do Card (Apenas Tabela e Controles) */}
+      <Card>
         {loading ? (
           <p className="text-gray-500">Loading...</p>
         ) : filtered.length === 0 ? (
@@ -255,7 +260,6 @@ export default function ProductsPage() {
           </>
         )}
       </Card>
-
       <Modal
         isOpen={isModalOpen}
         onClose={handleCancelModal}

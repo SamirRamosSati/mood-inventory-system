@@ -247,7 +247,7 @@ export default function ProductsPage() {
               <button
                 onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
                 disabled={currentPage === 0}
-                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40"
+                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
               >
                 ↑
               </button>
@@ -261,7 +261,7 @@ export default function ProductsPage() {
                   setCurrentPage((p) => Math.min(totalPages - 1, p + 1))
                 }
                 disabled={(currentPage + 1) * PAGE_SIZE >= filtered.length}
-                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40"
+                className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
               >
                 ↓
               </button>

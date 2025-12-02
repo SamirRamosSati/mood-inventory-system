@@ -2,10 +2,12 @@
 
 import { useAuth } from "@/contexts/authContext";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { user, isAdmin, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const pathname = usePathname();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -18,15 +20,40 @@ export default function Navbar() {
     await logout();
   };
 
+  const getPageTitle = (
+    path: string
+  ): { title: string; isDashboard: boolean } => {
+    if (path === "/dashboard") {
+      return {
+        title: `Hello ${user?.name?.split(" ")[0] || ""}`,
+        isDashboard: true,
+      };
+    }
+
+    const segments = path.split("/").filter(Boolean);
+    const lastSegment =
+      segments.length > 0 ? segments[segments.length - 1] : "Dashboard";
+
+    const formattedTitle = lastSegment
+      .replace(/-/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    return { title: formattedTitle, isDashboard: false };
+  };
+
+  const { title: currentTitle, isDashboard } = getPageTitle(pathname);
+
   return (
     <nav className="bg-[#fafafa] ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">
-              Hello {user?.name?.split(" ")[0]}
-            </h1>
-            <p className="text-xs text-gray-500">{getGreeting()}</p>
+            <h1 className="text-xl font-bold text-gray-900">{currentTitle}</h1>
+            <p className="text-xs text-gray-500">
+              {isDashboard ? getGreeting() : ""}
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
@@ -83,7 +110,6 @@ export default function Navbar() {
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
                   <div className="px-4 py-3 border-b border-gray-100">
@@ -96,7 +122,6 @@ export default function Navbar() {
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
-                      // Navigate to account settings
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                   >
@@ -120,7 +145,6 @@ export default function Navbar() {
                     <button
                       onClick={() => {
                         setIsDropdownOpen(false);
-                        // Navigate to admin panel
                       }}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                     >

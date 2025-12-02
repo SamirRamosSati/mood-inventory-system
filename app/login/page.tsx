@@ -29,7 +29,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-row h-screen w-screen bg-white p-0 md:p-7">
-      {/* Lado esquerdo com logo */}
       <div className="hidden w-[50vw] h-full bg-[#DFCDC1] md:flex justify-center items-center rounded-none md:rounded-2xl">
         <Image
           src="/images/logo.png"
@@ -40,14 +39,12 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Lado direito com form */}
       <div className="w-full md:w-[50vw] h-full flex flex-col items-center justify-center">
         <div className="w-full px-8 md:w-3/5 md:px-0">
           <h1 className="text-4xl text-black font-bold mb-2">Welcome</h1>
           <p className="text-gray-400 mb-8">Please login here</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -66,8 +63,6 @@ export default function LoginPage() {
                 autoComplete="email"
               />
             </div>
-
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -87,7 +82,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Remember me */}
             <div className="flex items-center">
               <input
                 id="remember-me"
@@ -103,7 +97,6 @@ export default function LoginPage() {
               </label>
             </div>
 
-            {/* Botão */}
             <div>
               <button
                 type="submit"

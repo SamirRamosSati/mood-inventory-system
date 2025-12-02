@@ -20,10 +20,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
 
-  // ✅ Redirecionamento seguro para /login
   useEffect(() => {
     if (!isLoading && !user) {
-      // só redireciona se não estivermos já na página de login
       if (!window.location.pathname.startsWith("/login")) {
         router.replace("/login");
       }

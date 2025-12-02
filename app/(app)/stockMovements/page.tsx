@@ -281,7 +281,7 @@ export default function StockMovementsPage() {
             }))}
           />
 
-          <div className="flex flex-col items-center justify-center gap-3 mt-4 md:gap-4">
+          <div className="flex items-center justify-center gap-4 mt-4">
             <button
               onClick={() =>
                 setPageByType((prev) => ({
@@ -290,12 +290,12 @@ export default function StockMovementsPage() {
                 }))
               }
               disabled={page === 0}
-              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40 text-lg md:text-base"
+              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
             >
               ↑
             </button>
 
-            <span className="text-xs md:text-sm text-gray-600 text-center">
+            <span className="text-sm text-gray-600">
               Page {page + 1} / {totalPages}
             </span>
 
@@ -306,8 +306,8 @@ export default function StockMovementsPage() {
                   [type]: Math.min(totalPages - 1, page + 1),
                 }))
               }
-              disabled={(page + 1) * PAGE_SIZE >= filtered.length}
-              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-40 text-lg md:text-base"
+              disabled={page + 1 >= totalPages}
+              className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-90"
             >
               ↓
             </button>

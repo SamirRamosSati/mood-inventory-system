@@ -22,19 +22,24 @@ export default function SetPasswordPage() {
   useEffect(() => {
     const validateToken = async () => {
       try {
+        console.log("Validating token:", token);
         const response = await fetch(
           `/api/staff/validate-token?token=${token}`
         );
+        console.log("Response status:", response.status);
         const data = await response.json();
+        console.log("Response data:", data);
 
         if (data.valid) {
           setValid(true);
           setUserName(data.name);
           setUserEmail(data.email);
         } else {
+          console.error("Token validation failed:", data.error);
           setError(data.error || "Invalid or expired invite link");
         }
-      } catch {
+      } catch (err) {
+        console.error("Failed to validate invite:", err);
         setError("Failed to validate invite");
       } finally {
         setLoading(false);

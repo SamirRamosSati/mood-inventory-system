@@ -4,8 +4,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export async function GET(req: NextRequest) {
   try {
     const token = req.nextUrl.searchParams.get("token");
+    console.log("Received token validation request:", token);
 
     if (!token) {
+      console.log("No token provided");
       return NextResponse.json(
         { valid: false, error: "Missing token" },
         { status: 400 }
@@ -20,7 +22,10 @@ export async function GET(req: NextRequest) {
       .eq("invite_token", token)
       .single();
 
+    console.log("Database query result:", { invite, error });
+
     if (error || !invite) {
+      console.log("Token not found in database");
       return NextResponse.json(
         { valid: false, error: "Invalid token" },
         { status: 404 }
@@ -28,14 +33,20 @@ export async function GET(req: NextRequest) {
     }
 
     // Check if expired
-    const expired = new Date(invite.invite_expiry).getTime() <= Date.now();
+    const expiryDate = new Date(invite.invite_expiry);
+    const now = new Date();
+    const expired = expiryDate.getTime() <= now.getTime();
+    console.log("Expiry check:", { expiryDate, now, expired });
+    
     if (expired) {
+      console.log("Token has expired");
       return NextResponse.json(
         { valid: false, error: "Invite link has expired" },
         { status: 410 }
       );
     }
 
+    console.log("Token is valid, returning success");
     return NextResponse.json({
       valid: true,
       email: invite.email,

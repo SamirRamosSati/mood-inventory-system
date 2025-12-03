@@ -12,7 +12,8 @@ export default function Table<T extends Record<string, unknown>>({
   data,
 }: TableProps<T>) {
   return (
-    <table className="w-full text-left border-collapse">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left border-collapse min-w-[800px]">
       <thead>
         <tr className="border-b">
           {columns.map((col) => (
@@ -41,5 +42,6 @@ export default function Table<T extends Record<string, unknown>>({
         ))}
       </tbody>
     </table>
+    </div>
   );
 }

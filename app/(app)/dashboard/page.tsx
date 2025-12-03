@@ -1,30 +1,40 @@
 "use client";
 
 import { useAuth } from "@/contexts/authContext";
+import StatCard from "@/components/dashboard/Card";
+import { RecentMovements } from "@/components/dashboard/recentMovements";
+import LowStockList from "@/components/dashboard/lowStock";
 import { useEffect, useState } from "react";
 import {
   Product,
+  LowStockProduct,
   ApiResponse,
   MovementWithRelations,
+  MovementType,
 } from "@/types";
 
+interface RecentMovement {
+  id: string | number;
+  type: MovementType;
+  product: string;
+  quantity: number;
+  time: string;
+}
+
 export default function DashboardPage() {
-  const { user } = useAuth();
+  useAuth();
 
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStock: 0,
-    totalValue: 0,
-    categoriesCount: 0,
+    todayMovements: 0,
+    pendingDeliveries: 0,
   });
 
-  const [recentMovements, setRecentMovements] = useState<MovementWithRelations[]>([]);
-  const [notifications, setNotifications] = useState<Array<{
-    id: string;
-    type: string;
-    message: string;
-    time: string;
-  }>>([]);
+  const [recentMovements, setRecentMovements] = useState<RecentMovement[]>([]);
+  const [lowStockProducts, setLowStockProducts] = useState<LowStockProduct[]>(
+    []
+  );
 
   useEffect(() => {
     async function fetchData() {

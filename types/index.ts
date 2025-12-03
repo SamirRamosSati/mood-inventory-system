@@ -186,18 +186,3 @@ export interface MovementFormData {
   sku?: string;
   customerName?: string;
 }
-
-export interface RecentMovement {
-  id: string | number;
-  type: MovementType;
-  product: string;
-  quantity: number;
-  time: string;
-  vendor?: string;
-  customer?: string;
-}
-
-export interface AppError extends Error {
-  statusCode?: number;
-  message: string;
-}

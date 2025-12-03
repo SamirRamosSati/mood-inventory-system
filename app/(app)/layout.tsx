@@ -39,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      <div className="hidden md:flex">
+      <div className="hidden md:flex px-4 py-4">
         <Sidebar linkItems={sidebarLinkItems} />
       </div>
 

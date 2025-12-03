@@ -26,7 +26,7 @@ export default function Sidebar({ linkItems }: SidebarProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen w-64 bg-white p-4 shadow-sm border-r border-gray-200 justify-between">
+    <div className="flex flex-col h-full w-64 bg-white p-4 shadow-sm border border-gray-200 justify-between rounded-2xl">
       <div>
         <Image
           src="/images/logo.png"

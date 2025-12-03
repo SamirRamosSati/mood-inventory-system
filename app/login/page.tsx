@@ -44,57 +44,68 @@ export default function LoginPage() {
           <h1 className="text-4xl text-black font-bold mb-2">Welcome</h1>
           <p className="text-gray-400 mb-8">Please login here</p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-400 mb-1"
-              >
-                Email Address
-              </label>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <div className="relative">
               <input
                 type="email"
                 id="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-[#DFCDC1] focus:border-[#DFCDC1] sm:text-sm text-gray-700 placeholder-gray-400"
+                className="peer block w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent text-gray-900 placeholder-transparent"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                placeholder="mathew.west@ienetworksolutions.com"
+                placeholder="Email Address"
                 autoComplete="email"
               />
-            </div>
-            <div>
               <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-400 mb-1"
+                htmlFor="email"
+                className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-placeholder-shown:left-4 peer-focus:-top-2.5 peer-focus:left-4 peer-focus:text-sm peer-focus:text-[#DFCDC1]"
               >
-                Password
+                Email Address
               </label>
+            </div>
+
+            <div className="relative">
               <input
                 type="password"
                 id="password"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-[#DFCDC1] focus:border-[#DFCDC1] sm:text-sm text-gray-700 placeholder-gray-400"
+                className="peer block w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent text-gray-900 placeholder-transparent"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
-                placeholder="• • • • • • • • • • • • "
+                placeholder="Password"
                 autoComplete="current-password"
               />
+              <label
+                htmlFor="password"
+                className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-placeholder-shown:left-4 peer-focus:-top-2.5 peer-focus:left-4 peer-focus:text-sm peer-focus:text-[#DFCDC1]"
+              >
+                Password
+              </label>
             </div>
 
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-[#DFCDC1] focus:ring-[#DFCDC1] border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember Me
-              </label>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 text-[#DFCDC1] focus:ring-[#DFCDC1] border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-900"
+                >
+                  Remember Me
+                </label>
+              </div>
+              <div>
+                <a
+                  href="#"
+                  className="text-sm text-[#DFCDC1] hover:text-[#C9B7A7]"
+                >
+                  Forgot Password?
+                </a>
+              </div>
             </div>
 
             <div>

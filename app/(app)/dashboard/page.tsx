@@ -62,16 +62,17 @@ export default function DashboardPage() {
                 : m.arrivalDate
                 ? new Date(m.arrivalDate)
                 : null;
-              if (!date) return "";
+              if (!date || isNaN(date.getTime())) return "";
               const now = new Date();
-              const diff = Math.max(0, now.getTime() - date.getTime());
+              const diff = now.getTime() - date.getTime();
+              if (diff < 0) return "just now";
               const minutes = Math.floor(diff / (1000 * 60));
               const hours = Math.floor(diff / (1000 * 60 * 60));
               const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-              if (minutes < 1) return "now";
-              if (minutes < 60) return `${minutes} minutes ago`;
-              if (hours < 24) return `${hours} hours ago`;
-              return `${days} days ago`;
+              if (minutes < 1) return "just now";
+              if (minutes < 60) return `${minutes} min ago`;
+              if (hours < 24) return `${hours}h ago`;
+              return `${days}d ago`;
             })();
 
             return {
@@ -144,8 +145,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="p-2 md:p-6 space-y-6">
+      <main className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Products"

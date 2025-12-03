@@ -66,7 +66,7 @@ export default function Sidebar({ linkItems }: SidebarProps) {
       <div className="space-y-2 mb-3">
         <button
           className="flex items-center w-full p-2 text-sm rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
-          onClick={() => router.push("/admin/account")}
+          onClick={() => router.push("/account")}
         >
           <LucideIcons.UserCircleIcon className="w-5 h-5 mr-3" />
           Account

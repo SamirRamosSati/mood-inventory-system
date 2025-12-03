@@ -81,7 +81,9 @@ export default function Navbar() {
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-10 h-10 rounded-full ${getAvatarStyle()} flex items-center justify-center text-white font-semibold`}
+                    className={`w-10 h-10 rounded-full ${getAvatarStyle(
+                      user?.avatar_color
+                    )} flex items-center justify-center text-white font-semibold`}
                   >
                     {user?.name ? getAvatarInitials(user.name) : ""}
                   </div>
@@ -125,6 +127,7 @@ export default function Navbar() {
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
+                      window.location.href = "/account";
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                   >

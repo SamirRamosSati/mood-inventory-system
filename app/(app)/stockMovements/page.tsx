@@ -17,8 +17,6 @@ import {
 
 const movementTypes = ["ARRIVAL", "PICKUP", "DELIVERY"] as const;
 
-type Col = TableColumn<MovementWithRelations>;
-
 function formatDate(value: string | undefined | null) {
   if (!value) return "";
   try {
@@ -149,7 +147,9 @@ export default function StockMovementsPage() {
         try {
           const year = new Date(dateString).getFullYear().toString();
           years.add(year);
-        } catch (e) {}
+        } catch {
+          // Ignore errors
+        }
       }
     });
     return Array.from(years)
@@ -175,7 +175,7 @@ export default function StockMovementsPage() {
         const yearMatch = !selectedYear || movementYear === selectedYear;
 
         return monthMatch && yearMatch;
-      } catch (e) {
+      } catch {
         return false;
       }
     });
@@ -292,7 +292,7 @@ export default function StockMovementsPage() {
   );
 
   return (
-    <div className="p-2 md:p-4 space-y-4">
+    <div className="p-2 md:p-6 space-y-6">
       <CustomTabs tabs={tabs} rightElement={RightElements} />
 
       <Modal

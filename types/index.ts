@@ -14,6 +14,7 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  avatar_color?: string;
   created_at: string;
 }
 

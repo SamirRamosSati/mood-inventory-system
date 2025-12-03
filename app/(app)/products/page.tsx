@@ -204,14 +204,11 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-2 space-y-4">
+    <div className="p-2 md:p-6 space-y-6">
       {" "}
-      {/* Adicionado space-y-4 para separar a linha de filtros do Card */}
-      {/* 1. Elementos movidos para fora do Card */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {" "}
-          {/* Ajustado gap para consistência visual */}
           <SearchBar onSearch={handleSearch} />
           <Filters
             filters={[
@@ -243,7 +240,6 @@ export default function ProductsPage() {
           }}
         />
       </div>
-      {/* 2. Conteúdo do Card (Apenas Tabela e Controles) */}
       <Card>
         {loading ? (
           <p className="text-gray-500">Loading...</p>

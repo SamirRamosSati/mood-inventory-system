@@ -10,6 +10,10 @@ export default function SetPasswordPage() {
   const router = useRouter();
   const token = params.token as string;
 
+  console.log("=== SET PASSWORD PAGE RENDERED ===");
+  console.log("Token from URL:", token);
+  console.log("Current pathname:", typeof window !== 'undefined' ? window.location.pathname : 'SSR');
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [valid, setValid] = useState(false);

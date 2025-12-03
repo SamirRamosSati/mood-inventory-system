@@ -37,13 +37,15 @@ export default async function proxy(req: NextRequest) {
   } = await supabase.auth.getSession();
 
   const isLoginPage = req.nextUrl.pathname === "/login";
+  const isSetPasswordPage = req.nextUrl.pathname.startsWith("/set-password");
   const isApiRoute = req.nextUrl.pathname.startsWith("/api/");
 
   if (isApiRoute) {
     return response;
   }
 
-  if (!session && !isLoginPage) {
+  // Allow public access to login and set-password pages
+  if (!session && !isLoginPage && !isSetPasswordPage) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 

@@ -3,6 +3,7 @@
 import { useAuth } from "@/contexts/authContext";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { getAvatarInitials, getAvatarStyle } from "@/lib/avatarUtils";
 
 export default function Navbar() {
   const { user, isAdmin, logout } = useAuth();
@@ -79,8 +80,10 @@ export default function Navbar() {
                 className="flex items-center gap-3 hover:bg-gray-100 rounded-lg p-2 transition"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                    {user?.name?.charAt(0).toUpperCase()}
+                  <div
+                    className={`w-10 h-10 rounded-full ${getAvatarStyle()} flex items-center justify-center text-white font-semibold`}
+                  >
+                    {user?.name ? getAvatarInitials(user.name) : ""}
                   </div>
 
                   <div className="text-left hidden sm:block">

@@ -1,20 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Sidebar, { SidebarLinkItem } from "@/components/layout/sideBar";
 import Navbar from "@/components/layout/navBar";
 import { useAuth } from "@/contexts/authContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useRouter } from "next/navigation";
-
-const sidebarLinkItems: SidebarLinkItem[] = [
-  { href: "/dashboard", icon: "LayoutDashboard", label: "Dashboard" },
-  { href: "/products", icon: "Box", label: "Products" },
-  { href: "/stockMovements", icon: "Warehouse", label: "Stock Movements" },
-  { href: "/staff", icon: "UsersIcon", label: "Staff" },
-  { href: "/deliveries", icon: "Truck", label: "Deliveries" },
-  { href: "/locations", icon: "MapPinHouse", label: "Locations" },
-];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
@@ -27,6 +18,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       }
     }
   }, [isLoading, user, router]);
+
+  const sidebarLinkItems: SidebarLinkItem[] = useMemo(() => {
+    const items: SidebarLinkItem[] = [
+      { href: "/dashboard", icon: "LayoutDashboard", label: "Dashboard" },
+      { href: "/products", icon: "Box", label: "Products" },
+      { href: "/stockMovements", icon: "Warehouse", label: "Stock Movements" },
+      { href: "/deliveries", icon: "Truck", label: "Deliveries" },
+    ];
+
+    // Only show Staff for admins
+    if (user?.role?.toLowerCase() === "admin") {
+      items.splice(3, 0, { href: "/staff", icon: "UsersIcon", label: "Staff" });
+    }
+
+    return items;
+  }, [user?.role]);
 
   if (isLoading) return <LoadingScreen />;
 

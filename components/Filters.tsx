@@ -28,8 +28,8 @@ export default function Filters({ filters }: FiltersProps) {
             className="bg-transparent outline-none text-sm text-gray-400"
           >
             <option value="">{filter.placeholder || "All"}</option>
-            {filter.options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+            {filter.options.map((opt, optIdx) => (
+              <option key={`${opt.value}-${optIdx}`} value={opt.value}>
                 {opt.label}
               </option>
             ))}

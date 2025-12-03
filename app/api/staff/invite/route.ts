@@ -74,7 +74,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/set-password/${token}`;
+    const appUrlBase = (
+      process.env.NEXT_PUBLIC_APP_URL || "https://mood-inventory.vercel.app"
+    ).replace(/\/$/, "");
+    const inviteLink = `${appUrlBase}/set-password/${token}`;
 
     const sgResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
       method: "POST",

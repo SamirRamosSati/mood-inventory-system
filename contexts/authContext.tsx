@@ -38,7 +38,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAdmin(false);
       }
     } catch (err) {
-      console.error("Error fetching session:", err);
+      // Don't log errors on public pages (login, set-password)
+      if (typeof window !== 'undefined') {
+        const isPublicPage = window.location.pathname.startsWith('/login') || 
+                            window.location.pathname.startsWith('/set-password');
+        if (!isPublicPage) {
+          console.error("Error fetching session:", err);
+        }
+      }
       setUser(null);
       setIsAdmin(false);
     } finally {
@@ -47,6 +54,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Skip session check on public pages
+    if (typeof window !== 'undefined') {
+      const isPublicPage = window.location.pathname.startsWith('/login') || 
+                          window.location.pathname.startsWith('/set-password');
+      if (isPublicPage) {
+        setIsLoading(false);
+        return;
+      }
+    }
+
     refreshSession();
 
     const {

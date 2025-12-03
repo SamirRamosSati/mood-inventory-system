@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     const now = new Date();
     const expired = expiryDate.getTime() <= now.getTime();
     console.log("Expiry check:", { expiryDate, now, expired });
-    
+
     if (expired) {
       console.log("Token has expired");
       return NextResponse.json(

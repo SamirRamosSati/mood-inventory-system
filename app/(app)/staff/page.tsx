@@ -6,10 +6,15 @@ import SearchBar from "@/components/searchBar";
 import AddButton from "@/components/AddButton";
 import Filters from "@/components/Filters";
 import Modal from "@/components/modal";
+import Dialog from "@/components/Dialog";
 import EmployeeForm from "@/components/staff/staffForm";
 import StaffTable, { Employee } from "@/components/staff/staffTable";
+import { useDialog } from "@/hooks/useDialog";
+import { DialogVariant } from "@/hooks/useDialog";
+import toast from "react-hot-toast";
 
 export default function StaffPage() {
+  const dialog = useDialog();
   const [search, setSearch] = useState("");
   const [duty, setDuty] = useState("");
 
@@ -54,11 +59,20 @@ export default function StaffPage() {
     if (!employee) return;
 
     const isPending = employee.status === "pending";
-    const confirmMsg = isPending
-      ? "Delete this pending invite?"
-      : "Delete this employee? This will remove their account permanently.";
+    const title = isPending ? "Delete Pending Invite?" : "Delete Employee?";
+    const description = isPending
+      ? "This will remove the pending invitation. The user won't be able to set up their account."
+      : "This will permanently delete the employee account and remove all access. This action cannot be undone.";
 
-    if (!confirm(confirmMsg)) return;
+    const confirmed = await dialog.confirm(title, description, {
+      primaryLabel: "Delete",
+      secondaryLabel: "Cancel",
+      variant: "danger",
+    });
+
+    if (!confirmed) return;
+
+    dialog.setLoading(true);
 
     try {
       const params = new URLSearchParams();
@@ -76,15 +90,19 @@ export default function StaffPage() {
       const result = await response.json();
 
       if (!result.success) {
-        alert(result.error || "Failed to delete");
+        dialog.setLoading(false);
+        dialog.alert("Error", result.error || "Failed to delete employee");
         return;
       }
 
       setEmployees((prev) => prev.filter((e) => e.id !== id));
-      alert(result.message);
+      dialog.setLoading(false);
+      dialog.close();
+      toast.success(result.message || "Employee deleted successfully");
     } catch (error) {
       console.error("Error deleting employee:", error);
-      alert("An unexpected error occurred");
+      dialog.setLoading(false);
+      dialog.alert("Error", "An unexpected error occurred");
     }
   }
 
@@ -120,7 +138,7 @@ export default function StaffPage() {
         const result = await response.json();
 
         if (!result.success) {
-          alert(result.error || "Failed to update");
+          dialog.alert("Error", result.error || "Failed to update employee");
           setSaving(false);
           return;
         }
@@ -133,7 +151,7 @@ export default function StaffPage() {
         setSaving(false);
         setEditingEmployee(null);
         setIsModalOpen(false);
-        alert(result.message);
+        toast.success(result.message || "Employee updated successfully");
       } else {
         // Send invite
         const response = await fetch("/api/staff/invite", {
@@ -151,7 +169,7 @@ export default function StaffPage() {
         const result = await response.json();
 
         if (!result.success) {
-          alert(result.error || "Failed to send invite");
+          dialog.alert("Error", result.error || "Failed to send invite");
           setSaving(false);
           return;
         }
@@ -165,13 +183,13 @@ export default function StaffPage() {
 
         setSaving(false);
         setIsModalOpen(false);
-        alert(
+        toast.success(
           "Invite sent successfully! User will receive an email to set their password."
         );
       }
     } catch (error) {
       console.error("Error submitting employee:", error);
-      alert("An unexpected error occurred");
+      dialog.alert("Error", "An unexpected error occurred");
       setSaving(false);
     }
   }
@@ -264,6 +282,34 @@ export default function StaffPage() {
           saving={saving}
         />
       </Modal>
+
+      <Dialog
+        isOpen={dialog.config.isOpen}
+        title={dialog.config.title}
+        description={dialog.config.description}
+        onClose={dialog.close}
+        primaryAction={
+          dialog.config.primaryAction
+            ? {
+                label: dialog.config.primaryAction.label,
+                variant: dialog.config.primaryAction.variant as DialogVariant,
+                onClick: dialog.onPrimary || (() => {}),
+                loading: dialog.config.primaryAction.loading,
+              }
+            : undefined
+        }
+        secondaryAction={
+          dialog.config.secondaryAction
+            ? {
+                label: dialog.config.secondaryAction.label,
+                onClick: dialog.onSecondary || (() => {}),
+              }
+            : undefined
+        }
+        closeOnClickOutside={dialog.config.closeOnClickOutside}
+      >
+        {dialog.config.children}
+      </Dialog>
     </div>
   );
 }

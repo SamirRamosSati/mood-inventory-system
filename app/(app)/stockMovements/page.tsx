@@ -4,12 +4,16 @@ import React, { useState, useEffect, useMemo } from "react";
 import AddButton from "@/components/AddButton";
 import Table from "@/components/Table";
 import Modal from "@/components/modal";
+import Dialog from "@/components/Dialog";
 import CustomTabs from "@/components/stockMovements/customTabs";
 import RowActions from "@/components/stockMovements/RowActions";
 import StockMovementForm from "@/components/stockMovements/stockMovement-form";
 import Filters from "@/components/Filters";
 import PaginationControls from "@/components/paginationControl";
 import { MovementWithRelations, TableColumn, ApiResponse } from "@/types";
+import { useDialog } from "@/hooks/useDialog";
+import { DialogVariant } from "@/hooks/useDialog";
+import toast from "react-hot-toast";
 import {
   MOVEMENT_COLUMNS_MAP,
   MONTH_FILTER_OPTIONS,
@@ -46,6 +50,7 @@ function getMovementDate(movement: MovementWithRelations): string | null {
 }
 
 export default function StockMovementsPage() {
+  const dialog = useDialog();
   const [movements, setMovements] = useState<MovementWithRelations[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMovement, setEditingMovement] =
@@ -108,17 +113,33 @@ export default function StockMovementsPage() {
       } else if (newOrUpdatedMovement) {
         setMovements((prev) => [...prev, newOrUpdatedMovement]);
       }
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : "Error saving movement");
-    } finally {
+
+      toast.success(editingMovement ? "Movement updated" : "Movement created");
       setEditingMovement(null);
       setIsModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      dialog.alert(
+        "Error",
+        err instanceof Error ? err.message : "Error saving movement"
+      );
     }
   };
 
   const handleDeleteMovement = async (id: string) => {
-    if (!confirm("Delete this movement?")) return;
+    const confirmed = await dialog.confirm(
+      "Delete Movement?",
+      "This will permanently remove the stock movement record. This action cannot be undone.",
+      {
+        primaryLabel: "Delete",
+        secondaryLabel: "Cancel",
+        variant: "danger",
+      }
+    );
+
+    if (!confirmed) return;
+
+    dialog.setLoading(true);
 
     try {
       const res = await fetch(`/api/stockMovements?id=${id}`, {
@@ -128,9 +149,16 @@ export default function StockMovementsPage() {
       if (!data.success) throw new Error(data.error || "Failed to delete");
 
       setMovements((prev) => prev.filter((m) => m.id !== id));
+      dialog.setLoading(false);
+      dialog.close();
+      toast.success("Movement deleted successfully");
     } catch (err) {
       console.error(err);
-      alert(err instanceof Error ? err.message : "Error deleting movement");
+      dialog.setLoading(false);
+      dialog.alert(
+        "Error",
+        err instanceof Error ? err.message : "Error deleting movement"
+      );
     }
   };
 
@@ -312,6 +340,34 @@ export default function StockMovementsPage() {
           }}
         />
       </Modal>
+
+      <Dialog
+        isOpen={dialog.config.isOpen}
+        title={dialog.config.title}
+        description={dialog.config.description}
+        onClose={dialog.close}
+        primaryAction={
+          dialog.config.primaryAction
+            ? {
+                label: dialog.config.primaryAction.label,
+                variant: dialog.config.primaryAction.variant as DialogVariant,
+                onClick: dialog.onPrimary || (() => {}),
+                loading: dialog.config.primaryAction.loading,
+              }
+            : undefined
+        }
+        secondaryAction={
+          dialog.config.secondaryAction
+            ? {
+                label: dialog.config.secondaryAction.label,
+                onClick: dialog.onSecondary || (() => {}),
+              }
+            : undefined
+        }
+        closeOnClickOutside={dialog.config.closeOnClickOutside}
+      >
+        {dialog.config.children}
+      </Dialog>
     </div>
   );
 }

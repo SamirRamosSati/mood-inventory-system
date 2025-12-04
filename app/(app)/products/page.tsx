@@ -7,10 +7,14 @@ import AddButton from "@/components/AddButton";
 import Table from "@/components/Table";
 import Filters from "@/components/Filters";
 import Modal from "@/components/modal";
+import Dialog from "@/components/Dialog";
 import RowActions from "@/components/stockMovements/RowActions";
 import ProductForm from "@/components/products/productsForm";
 import PaginationControls from "@/components/paginationControl";
 import { Product, ApiResponse } from "@/types";
+import { useDialog } from "@/hooks/useDialog";
+import { DialogVariant } from "@/hooks/useDialog";
+import toast from "react-hot-toast";
 
 interface ProductFormData {
   name: string;
@@ -20,6 +24,7 @@ interface ProductFormData {
 }
 
 export default function ProductsPage() {
+  const dialog = useDialog();
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
@@ -78,7 +83,19 @@ export default function ProductsPage() {
   }
 
   async function handleDeleteProduct(id: string) {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    const confirmed = await dialog.confirm(
+      "Delete Product?",
+      "This will permanently remove the product from your inventory. This action cannot be undone.",
+      {
+        primaryLabel: "Delete",
+        secondaryLabel: "Cancel",
+        variant: "danger",
+      }
+    );
+
+    if (!confirmed) return;
+
+    dialog.setLoading(true);
 
     try {
       const prev = products;
@@ -95,9 +112,14 @@ export default function ProductsPage() {
         const txt = await res.text();
         throw new Error(`Delete failed: ${res.status} ${txt}`);
       }
+
+      dialog.setLoading(false);
+      dialog.close();
+      toast.success("Product deleted successfully");
     } catch (err) {
       console.error("Failed to delete product:", err);
-      alert("Failed to delete product. See console for details.");
+      dialog.setLoading(false);
+      dialog.alert("Error", "Failed to delete product. Please try again.");
     }
   }
 
@@ -269,6 +291,33 @@ export default function ProductsPage() {
           error={error}
         />
       </Modal>
+      <Dialog
+        isOpen={dialog.config.isOpen}
+        title={dialog.config.title}
+        description={dialog.config.description}
+        onClose={dialog.close}
+        primaryAction={
+          dialog.config.primaryAction
+            ? {
+                label: dialog.config.primaryAction.label,
+                variant: dialog.config.primaryAction.variant as DialogVariant,
+                onClick: dialog.onPrimary || (() => {}),
+                loading: dialog.config.primaryAction.loading,
+              }
+            : undefined
+        }
+        secondaryAction={
+          dialog.config.secondaryAction
+            ? {
+                label: dialog.config.secondaryAction.label,
+                onClick: dialog.onSecondary || (() => {}),
+              }
+            : undefined
+        }
+        closeOnClickOutside={dialog.config.closeOnClickOutside}
+      >
+        {dialog.config.children}
+      </Dialog>
     </div>
   );
 }

@@ -58,6 +58,7 @@ export default function StockMovementsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [activeTab, setActiveTab] = useState<string>("ARRIVAL");
   const [pageByType, setPageByType] = useState<Record<string, number>>({
     ARRIVAL: 0,
     PICKUP: 0,
@@ -175,9 +176,7 @@ export default function StockMovementsPage() {
         try {
           const year = new Date(dateString).getFullYear().toString();
           years.add(year);
-        } catch {
-          // Ignore errors
-        }
+        } catch {}
       }
     });
     return Array.from(years)
@@ -213,72 +212,56 @@ export default function StockMovementsPage() {
     const filtered = filteredMovements.filter((m) => m.type === type);
 
     const page = pageByType[type] ?? 0;
-    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
     const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-
-    const handleTabPageChange = (newPage: number) => {
-      setPageByType((prev) => ({
-        ...prev,
-        [type]: newPage,
-      }));
-    };
 
     return {
       value: type,
       label: type,
       content: (
-        <>
-          <Table<Record<string, unknown>>
-            columns={
-              MOVEMENT_COLUMNS_MAP[type].map((col) => ({
-                ...col,
-                render:
-                  col.render ??
-                  ((item: MovementWithRelations) => {
-                    const value = (item as unknown as Record<string, unknown>)[
-                      col.key
-                    ];
+        <Table<Record<string, unknown>>
+          columns={
+            MOVEMENT_COLUMNS_MAP[type].map((col) => ({
+              ...col,
+              render:
+                col.render ??
+                ((item: MovementWithRelations) => {
+                  const value = (item as unknown as Record<string, unknown>)[
+                    col.key
+                  ];
 
-                    if (React.isValidElement(value)) return value;
+                  if (React.isValidElement(value)) return value;
 
-                    if (
-                      typeof col.key === "string" &&
-                      col.key.toLowerCase().includes("date")
-                    ) {
-                      return formatDate(String(value ?? ""));
-                    }
+                  if (
+                    typeof col.key === "string" &&
+                    col.key.toLowerCase().includes("date")
+                  ) {
+                    return formatDate(String(value ?? ""));
+                  }
 
-                    if (
-                      typeof value === "string" ||
-                      typeof value === "number" ||
-                      typeof value === "boolean"
-                    ) {
-                      return String(value);
-                    }
+                  if (
+                    typeof value === "string" ||
+                    typeof value === "number" ||
+                    typeof value === "boolean"
+                  ) {
+                    return String(value);
+                  }
 
-                    return "";
-                  }),
-              })) as unknown as TableColumn<Record<string, unknown>>[]
-            }
-            data={paginated.map((m) => ({
-              ...m,
-              productName: m.productName ?? m.product?.name ?? "",
-              userName: m.userName ?? m.user?.name ?? "",
-              actions: (
-                <RowActions
-                  onEdit={() => handleEditMovement(m)}
-                  onDelete={() => handleDeleteMovement(m.id)}
-                />
-              ),
-            }))}
-          />
-
-          <PaginationControls
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handleTabPageChange}
-          />
-        </>
+                  return "";
+                }),
+            })) as unknown as TableColumn<Record<string, unknown>>[]
+          }
+          data={paginated.map((m) => ({
+            ...m,
+            productName: m.productName ?? m.product?.name ?? "",
+            userName: m.userName ?? m.user?.name ?? "",
+            actions: (
+              <RowActions
+                onEdit={() => handleEditMovement(m)}
+                onDelete={() => handleDeleteMovement(m.id)}
+              />
+            ),
+          }))}
+        />
       ),
       isLoading,
       dataLength: filtered.length,
@@ -321,7 +304,30 @@ export default function StockMovementsPage() {
 
   return (
     <div className="p-2 md:p-6 space-y-6">
-      <CustomTabs tabs={tabs} rightElement={RightElements} />
+      <CustomTabs
+        tabs={tabs}
+        rightElement={RightElements}
+        onTabChange={setActiveTab}
+      />
+
+      {(() => {
+        const filtered = filteredMovements.filter((m) => m.type === activeTab);
+        const page = pageByType[activeTab] ?? 0;
+        const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+
+        return (
+          <PaginationControls
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(newPage) => {
+              setPageByType((prev) => ({
+                ...prev,
+                [activeTab]: newPage,
+              }));
+            }}
+          />
+        );
+      })()}
 
       <Modal
         isOpen={isModalOpen}

@@ -24,7 +24,7 @@ export default function PaginationControls({
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 mt-4">
+    <div className="flex items-center justify-center gap-4 mt-4 relative z-10">
       <button
         onClick={handlePrev}
         disabled={currentPage === 0}

@@ -270,14 +270,14 @@ export default function ProductsPage() {
         ) : (
           <>
             <Table columns={columns} data={paginated} />
-            <PaginationControls
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
           </>
         )}
       </Card>
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <Modal
         isOpen={isModalOpen}
         onClose={handleCancelModal}

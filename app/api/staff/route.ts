@@ -25,7 +25,8 @@ export async function GET() {
         )
       `
       )
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(4);
 
     if (error) {
       console.error("Error fetching staff:", error);

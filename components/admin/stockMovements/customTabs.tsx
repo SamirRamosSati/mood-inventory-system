@@ -16,16 +16,23 @@ type CustomTab = {
 export default function CustomTabs({
   tabs,
   rightElement,
+  onTabChange,
 }: {
   tabs: CustomTab[];
   rightElement?: React.ReactNode;
+  onTabChange?: (tabValue: string) => void;
 }) {
   const [tab, setTab] = React.useState(tabs[0].value);
+
+  const handleTabChange = (newTab: string) => {
+    setTab(newTab);
+    onTabChange?.(newTab);
+  };
 
   return (
     <TabsPrimitive.Root
       value={tab}
-      onValueChange={setTab}
+      onValueChange={handleTabChange}
       className="flex flex-col gap-3"
     >
       <div className="flex justify-between items-center">

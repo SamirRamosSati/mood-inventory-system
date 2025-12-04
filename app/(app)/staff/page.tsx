@@ -9,6 +9,7 @@ import Modal from "@/components/modal";
 import Dialog from "@/components/Dialog";
 import EmployeeForm from "@/components/staff/staffForm";
 import StaffTable, { Employee } from "@/components/staff/staffTable";
+import PaginationControls from "@/components/paginationControl";
 import { useDialog } from "@/hooks/useDialog";
 import { DialogVariant } from "@/hooks/useDialog";
 import toast from "react-hot-toast";
@@ -17,6 +18,7 @@ export default function StaffPage() {
   const dialog = useDialog();
   const [search, setSearch] = useState("");
   const [duty, setDuty] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
@@ -45,8 +47,28 @@ export default function StaffPage() {
     fetchEmployees();
   }, []);
 
+  const duties = [...new Set(employees.map((e) => e.duty))];
+  const filtered = employees.filter((e) => {
+    const searchMatch =
+      e.name.toLowerCase().includes(search.toLowerCase()) ||
+      e.email.toLowerCase().includes(search.toLowerCase());
+    const dutyMatch = duty ? e.duty === duty : true;
+    return searchMatch && dutyMatch;
+  });
+  const PAGE_SIZE = 4;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+
+  // Reset page to 0 when search or duty filter changes
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [search, duty]);
+
   function handleSearch(value: string) {
     setSearch(value);
+  }
+
+  function handleDutyChange(value: string) {
+    setDuty(value);
   }
 
   function handleEditEmployee(emp: Employee) {
@@ -179,6 +201,7 @@ export default function StaffPage() {
         const fetchData = await fetchResponse.json();
         if (fetchData.success && fetchData.data) {
           setEmployees(fetchData.data);
+          // Keep current page, don't reset to 0
         }
 
         setSaving(false);
@@ -194,16 +217,10 @@ export default function StaffPage() {
     }
   }
 
-  const duties = [...new Set(employees.map((e) => e.duty))];
-
-  const filtered = employees.filter((e) => {
-    const searchMatch =
-      e.name.toLowerCase().includes(search.toLowerCase()) ||
-      e.email.toLowerCase().includes(search.toLowerCase());
-    const dutyMatch = duty ? e.duty === duty : true;
-
-    return searchMatch && dutyMatch;
-  });
+  const paginated = filtered.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE
+  );
 
   return (
     <div className="p-2 md:p-6 space-y-4 md:space-y-6">
@@ -216,7 +233,7 @@ export default function StaffPage() {
                 options: duties.map((d) => ({ label: d, value: d })),
                 selected: duty,
                 placeholder: "Filter",
-                onChange: setDuty,
+                onChange: handleDutyChange,
               },
             ]}
           />
@@ -236,12 +253,18 @@ export default function StaffPage() {
         </div>
 
         <StaffTable
-          employees={filtered}
+          employees={paginated}
           loading={loading}
           onEdit={handleEditEmployee}
           onDelete={handleDeleteEmployee}
         />
       </Card>
+
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       <Modal
         isOpen={isModalOpen}

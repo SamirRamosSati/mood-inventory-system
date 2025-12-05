@@ -188,7 +188,9 @@ export default function ResetPasswordPage() {
 
           <button
             type="submit"
-            disabled={loading || !isPasswordValid || password !== confirmPassword}
+            disabled={
+              loading || !isPasswordValid || password !== confirmPassword
+            }
             className="w-full py-3 px-4 bg-[#DFCDC1] text-white font-semibold rounded-xl hover:bg-[#C8A893] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Resetting..." : "Reset Password"}

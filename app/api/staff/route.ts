@@ -19,14 +19,14 @@ export async function GET() {
         role,
         status,
         created_at,
+        avatar_color,
         StaffProfile!inner (
           function,
           phone
         )
       `
       )
-      .order("created_at", { ascending: false })
-      .limit(4);
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Error fetching staff:", error);
@@ -54,6 +54,7 @@ export async function GET() {
         duty: profile?.function || "",
         role: user.role,
         status: user.status || "active",
+        avatarColor: user.avatar_color,
         createdAt: new Date(user.created_at).toLocaleDateString("en-US", {
           year: "numeric",
           month: "2-digit",

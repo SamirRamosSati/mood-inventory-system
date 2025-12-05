@@ -91,9 +91,9 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="p-2 md:p-6 space-y-6">
+    <div className="p-2 md:p-6 space-y-6 flex flex-col h-full overflow-hidden">
       <Card>
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto max-h-full">
           {/* Header */}
           <div className="flex items-center gap-6 pb-6 border-b border-gray-200">
             <div

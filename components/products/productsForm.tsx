@@ -39,24 +39,32 @@ export default function ProductForm({
   const brandWrapperRef = useRef<HTMLDivElement>(null);
   const categoryWrapperRef = useRef<HTMLDivElement>(null);
 
+  // Handle click outside to close dropdowns
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
       if (
         brandWrapperRef.current &&
-        !brandWrapperRef.current.contains(event.target as Node)
+        !brandWrapperRef.current.contains(target)
       ) {
         setShowBrandDropdown(false);
       }
+
       if (
         categoryWrapperRef.current &&
-        !categoryWrapperRef.current.contains(event.target as Node)
+        !categoryWrapperRef.current.contains(target)
       ) {
         setShowCategoryDropdown(false);
       }
-    }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setShowBrandDropdown, setShowCategoryDropdown]);
 
   useEffect(() => {
     async function loadBrandsAndCategories() {

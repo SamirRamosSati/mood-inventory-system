@@ -165,12 +165,11 @@ export default function StaffPage() {
           return;
         }
 
-        // Fetch updated employees to get latest avatar colors and data
-        const fetchResponse = await fetch("/api/staff");
-        const fetchData = await fetchResponse.json();
-        if (fetchData.success && fetchData.data) {
-          setEmployees(fetchData.data);
-        }
+        setEmployees((prev) =>
+          prev.map((e) =>
+            e.id === editingEmployee.id ? { ...editingEmployee, ...data } : e
+          )
+        );
         setSaving(false);
         setEditingEmployee(null);
         setIsModalOpen(false);

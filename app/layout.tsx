@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo.png",
   },
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -21,7 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="color-scheme" content="light" />
+        <meta name="supported-color-schemes" content="light" />
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <MobileBlocker>{children}</MobileBlocker>

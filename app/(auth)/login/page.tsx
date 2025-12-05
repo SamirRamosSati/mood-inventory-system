@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/authContext";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   const { login, isLoading } = useAuth();
@@ -98,14 +99,12 @@ export default function LoginPage() {
                   Remember Me
                 </label>
               </div>
-              <div>
-                <a
-                  href="#"
-                  className="text-sm text-[#DFCDC1] hover:text-[#C9B7A7]"
-                >
-                  Forgot Password?
-                </a>
-              </div>
+              <Link
+                href="/forgot-password"
+                className="text-sm text-[#DFCDC1] hover:text-[#C9B7A7]"
+              >
+                Forgot Password?
+              </Link>
             </div>
 
             <div>

@@ -110,10 +110,6 @@ export default function StaffTable({
           })}
         </tbody>
       </table>
-
-      <div className="py-6 text-center">
-        <p className="text-gray-500 text-sm">No more items to fetch.</p>
-      </div>
     </div>
   );
 }

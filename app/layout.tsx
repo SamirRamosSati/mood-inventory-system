@@ -16,11 +16,7 @@ export const metadata: Metadata = {
   colorScheme: "light",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({}: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -29,7 +25,6 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          <MobileBlocker>{children}</MobileBlocker>
           <Toaster position="top-right" />
         </AuthProvider>
       </body>

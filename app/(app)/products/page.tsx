@@ -191,7 +191,7 @@ export default function ProductsPage() {
     return searchMatch && brandMatch && categoryMatch;
   });
 
-  const PAGE_SIZE = 7;
+  const PAGE_SIZE = 15;
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice(
     currentPage * PAGE_SIZE,
@@ -226,9 +226,9 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-2 md:p-6 space-y-6">
+    <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
       {" "}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-4">
           {" "}
           <SearchBar onSearch={handleSearch} />
@@ -262,17 +262,19 @@ export default function ProductsPage() {
           }}
         />
       </div>
-      <Card>
-        {loading ? (
-          <p className="text-gray-500">Loading...</p>
-        ) : filtered.length === 0 ? (
-          <p className="text-gray-400">No products found.</p>
-        ) : (
-          <>
-            <Table columns={columns} data={paginated} />
-          </>
-        )}
-      </Card>
+      <div className="flex-1 flex flex-col min-h-0">
+        <Card>
+          {loading ? (
+            <p className="text-gray-500">Loading...</p>
+          ) : filtered.length === 0 ? (
+            <p className="text-gray-400">No products found.</p>
+          ) : (
+            <>
+              <Table columns={columns} data={paginated} />
+            </>
+          )}
+        </Card>
+      </div>
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}

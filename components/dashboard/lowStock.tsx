@@ -1,4 +1,5 @@
 import { LowStockProduct } from "@/types";
+import { AlertTriangle } from "lucide-react";
 
 interface Props {
   lowStockProducts: LowStockProduct[];
@@ -7,8 +8,15 @@ interface Props {
 export default function LowStockList({ lowStockProducts }: Props) {
   return (
     <div className="bg-white rounded-xl h-fit shadow-sm border border-gray-200">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-md font-semibold text-gray-900">Low Stock Alert</h3>
+      <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-md bg-orange-50">
+            <AlertTriangle className="w-4 h-4 text-orange-600" />
+          </div>
+          <h3 className="text-md font-semibold text-gray-900">
+            Low Stock Alert
+          </h3>
+        </div>
       </div>
       <div className="divide-y divide-gray-200">
         {lowStockProducts.map((product) => (

@@ -5,6 +5,7 @@ import StatCard from "@/components/dashboard/Card";
 import { RecentMovements } from "@/components/dashboard/recentMovements";
 import LowStockList from "@/components/dashboard/lowStock";
 import { useEffect, useState } from "react";
+import { Box, AlertTriangle, BarChart2, Truck } from "lucide-react";
 import {
   Product,
   LowStockProduct,
@@ -154,38 +155,38 @@ export default function DashboardPage() {
 
   return (
     <div className="p-2 md:p-6 space-y-6">
-      <main className="max-w-7xl mx-auto">
+      <main className="max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
             title="Total Products"
             value={stats.totalProducts}
-            icon="📦"
+            icon={<Box className="w-6 h-6 text-blue-600" />}
             valueColor="text-gray-900"
-            iconBg="bg-blue-100"
+            iconBg="bg-blue-50"
           />
 
           <StatCard
             title="Low Stock Items"
             value={stats.lowStock}
-            icon="⚠️"
+            icon={<AlertTriangle className="w-5 h-5 text-orange-600" />}
             valueColor="text-orange-600"
-            iconBg="bg-orange-100"
+            iconBg="bg-orange-50"
           />
 
           <StatCard
             title="Today's Movements"
             value={stats.todayMovements}
-            icon="📊"
+            icon={<BarChart2 className="w-6 h-6 text-green-600" />}
             valueColor="text-gray-900"
-            iconBg="bg-green-100"
+            iconBg="bg-green-50"
           />
 
           <StatCard
             title="Pending Deliveries"
             value={stats.pendingDeliveries}
-            icon="🚚"
+            icon={<Truck className="w-6 h-6 text-purple-600" />}
             valueColor="text-purple-600"
-            iconBg="bg-purple-100"
+            iconBg="bg-purple-50"
           />
         </div>
 

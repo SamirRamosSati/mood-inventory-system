@@ -47,9 +47,9 @@ export default function Navbar() {
   const { title: currentTitle, isDashboard } = getPageTitle(pathname);
 
   return (
-    <nav className="bg-[#fafafa] ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+    <nav className="bg-[#fafafa] w-full flex-shrink-0">
+      <div className="px-4 md:px-10 py-4 md:py-6">
+        <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold text-gray-900">{currentTitle}</h1>
             <p className="text-xs text-gray-500">

@@ -3,7 +3,8 @@
 "use client";
 
 import { Product } from "@/types";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductFormData {
   name: string;
@@ -28,6 +29,73 @@ export default function ProductForm({
   error,
 }: ProductFormProps) {
   const [formError, setFormError] = useState<string | null>(error);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [brandSearch, setBrandSearch] = useState(product?.brand || "");
+  const [categorySearch, setCategorySearch] = useState(product?.category || "");
+  const [showBrandDropdown, setShowBrandDropdown] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+  const brandWrapperRef = useRef<HTMLDivElement>(null);
+  const categoryWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        brandWrapperRef.current &&
+        !brandWrapperRef.current.contains(event.target as Node)
+      ) {
+        setShowBrandDropdown(false);
+      }
+      if (
+        categoryWrapperRef.current &&
+        !categoryWrapperRef.current.contains(event.target as Node)
+      ) {
+        setShowCategoryDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    async function loadBrandsAndCategories() {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        if (data.success && data.data) {
+          const uniqueBrands = Array.from(
+            new Set(
+              data.data
+                .map((p: Product) => p.brand)
+                .filter((b: string | null) => b && b.trim())
+            )
+          ) as string[];
+
+          const uniqueCategories = Array.from(
+            new Set(
+              data.data
+                .map((p: Product) => p.category)
+                .filter((c: string | null) => c && c.trim())
+            )
+          ) as string[];
+
+          setBrands(uniqueBrands);
+          setCategories(uniqueCategories);
+        }
+      } catch (err) {
+        console.error("Failed to load brands/categories", err);
+      }
+    }
+    loadBrandsAndCategories();
+  }, []);
+
+  useEffect(() => {
+    if (product) {
+      setBrandSearch(product.brand || "");
+      setCategorySearch(product.category || "");
+    }
+  }, [product]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,13 +106,8 @@ export default function ProductForm({
     const payload: ProductFormData = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value.trim(),
       sku: (form.elements.namedItem("sku") as HTMLInputElement).value.trim(),
-      category:
-        (
-          form.elements.namedItem("category") as HTMLInputElement
-        ).value.trim() || null,
-      brand:
-        (form.elements.namedItem("brand") as HTMLInputElement).value.trim() ||
-        null,
+      category: categorySearch.trim() || null,
+      brand: brandSearch.trim() || null,
     };
 
     onSubmit(payload);
@@ -78,28 +141,104 @@ export default function ProductForm({
         />
       </div>
 
-      <div>
+      <div ref={categoryWrapperRef}>
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Category
         </label>
-        <input
-          type="text"
-          name="category"
-          defaultValue={product?.category || ""}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            name="category"
+            value={categorySearch}
+            onFocus={() => setShowCategoryDropdown(true)}
+            onChange={(e) => {
+              setCategorySearch(e.target.value);
+              setShowCategoryDropdown(true);
+            }}
+            placeholder="Type or select category..."
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+          />
+
+          <AnimatePresence>
+            {categorySearch &&
+              showCategoryDropdown &&
+              categories.length > 0 && (
+                <motion.ul
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute z-10 border border-gray-200 rounded-lg mt-1 max-h-40 overflow-auto bg-white w-full shadow-lg"
+                >
+                  {categories
+                    .filter((c) =>
+                      c.toLowerCase().includes(categorySearch.toLowerCase())
+                    )
+                    .map((c, idx) => (
+                      <li
+                        key={idx}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                        onClick={() => {
+                          setCategorySearch(c);
+                          setShowCategoryDropdown(false);
+                        }}
+                      >
+                        {c}
+                      </li>
+                    ))}
+                </motion.ul>
+              )}
+          </AnimatePresence>
+        </div>
       </div>
 
-      <div>
+      <div ref={brandWrapperRef}>
         <label className="block text-sm font-medium text-gray-900 mb-2">
           Brand
         </label>
-        <input
-          type="text"
-          name="brand"
-          defaultValue={product?.brand || ""}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            name="brand"
+            value={brandSearch}
+            onFocus={() => setShowBrandDropdown(true)}
+            onChange={(e) => {
+              setBrandSearch(e.target.value);
+              setShowBrandDropdown(true);
+            }}
+            placeholder="Type or select brand..."
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+          />
+
+          <AnimatePresence>
+            {brandSearch && showBrandDropdown && brands.length > 0 && (
+              <motion.ul
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute z-10 border border-gray-200 rounded-lg mt-1 max-h-40 overflow-auto bg-white w-full shadow-lg"
+              >
+                {brands
+                  .filter((b) =>
+                    b.toLowerCase().includes(brandSearch.toLowerCase())
+                  )
+                  .map((b, idx) => (
+                    <li
+                      key={idx}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700"
+                      onClick={() => {
+                        setBrandSearch(b);
+                        setShowBrandDropdown(false);
+                      }}
+                    >
+                      {b}
+                    </li>
+                  ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <div className="flex gap-3 justify-end ml-auto">

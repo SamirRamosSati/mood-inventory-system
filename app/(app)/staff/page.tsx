@@ -55,7 +55,7 @@ export default function StaffPage() {
     const dutyMatch = duty ? e.duty === duty : true;
     return searchMatch && dutyMatch;
   });
-  const PAGE_SIZE = 4;
+  const PAGE_SIZE = 12;
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
   // Reset page to 0 when search or duty filter changes
@@ -223,8 +223,8 @@ export default function StaffPage() {
   );
 
   return (
-    <div className="p-2 md:p-6 space-y-4 md:space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="p-2 md:p-6 space-y-4 md:space-y-6 flex flex-col h-full">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <SearchBar onSearch={handleSearch} placeholder="Search..." />
           <Filters
@@ -247,18 +247,20 @@ export default function StaffPage() {
         />
       </div>
 
-      <Card>
-        <div className="pb-4 text-sm text-gray-500 font-medium">
-          Items found: {filtered.length}
-        </div>
+      <div className="flex-1 flex flex-col min-h-0">
+        <Card>
+          <div className="pb-4 text-sm text-gray-500 font-medium">
+            Items found: {filtered.length}
+          </div>
 
-        <StaffTable
-          employees={paginated}
-          loading={loading}
-          onEdit={handleEditEmployee}
-          onDelete={handleDeleteEmployee}
-        />
-      </Card>
+          <StaffTable
+            employees={paginated}
+            loading={loading}
+            onEdit={handleEditEmployee}
+            onDelete={handleDeleteEmployee}
+          />
+        </Card>
+      </div>
 
       <PaginationControls
         currentPage={currentPage}

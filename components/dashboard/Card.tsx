@@ -27,7 +27,7 @@ export default function StatCard({
         <div
           className={`w-12 h-12 rounded-lg flex items-center justify-center ${iconBg}`}
         >
-          <span className="text-2xl">{icon}</span>
+          {icon}
         </div>
       </div>
     </div>

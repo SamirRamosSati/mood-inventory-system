@@ -33,9 +33,9 @@ export default function CustomTabs({
     <TabsPrimitive.Root
       value={tab}
       onValueChange={handleTabChange}
-      className="flex flex-col gap-3"
+      className="flex flex-col gap-3 h-full"
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-shrink-0">
         <TabsPrimitive.List className="flex gap-2">
           {tabs.map((t) => (
             <TabsPrimitive.Trigger
@@ -54,7 +54,7 @@ export default function CustomTabs({
         {rightElement}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20">
+      <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1 overflow-auto">
         {tabs.map((t) => {
           const isActive = tab === t.value;
 

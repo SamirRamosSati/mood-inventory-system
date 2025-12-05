@@ -64,7 +64,7 @@ export default function StockMovementsPage() {
     PICKUP: 0,
     DELIVERY: 0,
   });
-  const PAGE_SIZE = 8;
+  const PAGE_SIZE = 15;
 
   useEffect(() => {
     async function loadMovements() {
@@ -303,12 +303,14 @@ export default function StockMovementsPage() {
   );
 
   return (
-    <div className="p-2 md:p-6 space-y-6">
-      <CustomTabs
-        tabs={tabs}
-        rightElement={RightElements}
-        onTabChange={setActiveTab}
-      />
+    <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
+      <div className="flex-1 flex flex-col min-h-0">
+        <CustomTabs
+          tabs={tabs}
+          rightElement={RightElements}
+          onTabChange={setActiveTab}
+        />
+      </div>
 
       {(() => {
         const filtered = filteredMovements.filter((m) => m.type === activeTab);

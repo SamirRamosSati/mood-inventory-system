@@ -27,7 +27,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       { href: "/deliveries", icon: "Truck", label: "Deliveries" },
     ];
 
-    // Only show Staff for admins
     if (user?.role?.toLowerCase() === "admin") {
       items.splice(3, 0, { href: "/staff", icon: "UsersIcon", label: "Staff" });
     }
@@ -46,9 +45,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col bg-[#fafafa] overflow-hidden">
         <div className="w-full max-w-[1600px] mx-auto px-4 md:px-10 flex-1 flex flex-col overflow-hidden">
           <Navbar />
-          <div className="flex-1 overflow-hidden py-2 flex flex-col">
-            {children}
-          </div>
+          <div className="flex-1 overflow-hidden flex flex-col">{children}</div>
         </div>
       </main>
     </div>

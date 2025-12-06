@@ -22,7 +22,9 @@ export async function GET() {
     const adminClient = createAdminClient();
     const { data: user, error: userError } = await adminClient
       .from("users")
-      .select("id, email, name, role, avatar_color, created_at")
+      .select(
+        "id, email, name, role, avatar_color, created_at, StaffProfile(function)"
+      )
       .eq("id", authUser.id)
       .single();
 
@@ -33,12 +35,17 @@ export async function GET() {
       );
     }
 
+    const staffProfile = Array.isArray(user.StaffProfile)
+      ? user.StaffProfile[0]
+      : user.StaffProfile;
+
     const sessionData: UserSession = {
       user: {
         email: user.email,
         name: user.name,
         role: user.role,
         avatar_color: user.avatar_color,
+        duty: staffProfile?.function,
         created_at: user.created_at,
       },
       isAdmin: String(user.role || "").toLowerCase() === "admin",

@@ -11,7 +11,6 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -68,7 +67,7 @@ export default function Navbar() {
   const { title: currentTitle, isDashboard } = getPageTitle(pathname);
 
   return (
-    <nav className="bg-[#fafafa] w-full flex-shrink-0">
+    <nav className="bg-[#fafafa] w-full shrink-0">
       <div className="px-4 md:px-10 py-4 md:py-6">
         <div className="flex justify-between items-center">
           <div>
@@ -114,7 +113,7 @@ export default function Navbar() {
                       {user?.name}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {isAdmin ? "Manager" : "Employee"}
+                      {user?.duty || (isAdmin ? "Manager" : "Employee")}
                     </p>
                   </div>
                 </div>

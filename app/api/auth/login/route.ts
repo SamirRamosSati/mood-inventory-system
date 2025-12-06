@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const adminClient = createAdminClient();
     const { data: user, error: userError } = await adminClient
       .from("users")
-      .select("id, email, name, role, created_at")
+      .select("id, email, name, role, avatar_color, created_at")
       .eq("id", authData.user.id)
       .single();
 
@@ -61,7 +61,13 @@ export async function POST(request: NextRequest) {
     }
 
     const sessionData: UserSession = {
-      user,
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        avatar_color: user.avatar_color,
+        created_at: user.created_at,
+      },
       isAdmin: String(user.role || "").toLowerCase() === "admin",
     };
 

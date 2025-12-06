@@ -58,7 +58,6 @@ export default function StaffPage() {
   const PAGE_SIZE = 12;
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
-  // Reset page to 0 when search or duty filter changes
   useEffect(() => {
     setCurrentPage(0);
   }, [search, duty]);
@@ -197,12 +196,10 @@ export default function StaffPage() {
           return;
         }
 
-        // Refresh the list to show the new pending invite
         const fetchResponse = await fetch("/api/staff");
         const fetchData = await fetchResponse.json();
         if (fetchData.success && fetchData.data) {
           setEmployees(fetchData.data);
-          // Keep current page, don't reset to 0
         }
 
         setSaving(false);

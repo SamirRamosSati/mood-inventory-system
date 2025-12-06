@@ -116,6 +116,69 @@ export interface MovementFormData {
   customerName?: string;
 }
 
+// Delivery types
+export enum DeliveryStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  PAID = "paid",
+  CANCELLED = "cancelled",
+}
+
+export interface Delivery extends Record<string, unknown> {
+  id: string;
+  created_by: string;
+  customer_name: string;
+  customer_phone: string;
+  delivery_address: string;
+  scheduled_date: string;
+  notes?: string | null;
+  status: DeliveryStatus;
+  created_at: string;
+  updated_at: string;
+  user?: User & Record<string, unknown>;
+  userName?: string;
+}
+
+export interface CreateDeliveryData {
+  customer_name: string;
+  customer_phone: string;
+  delivery_address: string;
+  scheduled_date: string;
+  notes?: string;
+}
+
+export interface UpdateDeliveryData {
+  customer_name?: string;
+  customer_phone?: string;
+  delivery_address?: string;
+  scheduled_date?: string;
+  notes?: string;
+}
+
+export interface DeliveryFormData {
+  customer_name: string;
+  customer_phone: string;
+  delivery_address: string;
+  scheduled_date: string;
+  notes?: string;
+}
+
+export enum NotificationType {
+  DELIVERY_CREATED = "delivery_created",
+  DELIVERY_COMPLETED = "delivery_completed",
+  DELIVERY_PAID = "delivery_paid",
+}
+
+export interface Notification extends Record<string, unknown> {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  delivery_id: string;
+  title: string;
+  message: string;
+  read_at?: string | null;
+  created_at: string;
+}
 export interface MovementWithRelations extends Movement {
   product?: Product;
   user?: User & Record<string, unknown>;

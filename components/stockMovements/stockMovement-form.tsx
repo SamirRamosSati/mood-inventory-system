@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Search } from "lucide-react";
 
 import { MovementWithRelations, MovementFormData, MovementType } from "@/types";
 
@@ -34,11 +35,15 @@ export default function StockMovementForm({
   const [type, setType] = useState<MovementType>(
     (movement?.type as MovementType) ?? movementTypes[0]
   );
-  const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
+  const [products, setProducts] = useState<
+    { id: string; name: string; sku: string; stock: number }[]
+  >([]);
   const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<{
     id: string;
     name: string;
+    sku: string;
+    stock: number;
   } | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -80,12 +85,16 @@ export default function StockMovementForm({
       setSelectedProduct({
         id: movement.productId,
         name: movement.productName,
+        sku: typeof movement.sku === "string" ? movement.sku : "",
+        stock: 0,
       });
       setSearch(movement.productName);
     } else if (movement?.product?.id && movement?.product?.name) {
       setSelectedProduct({
         id: movement.product.id,
         name: movement.product.name,
+        sku: movement.product.sku,
+        stock: movement.product.stock,
       });
       setSearch(movement.product.name);
     }
@@ -137,47 +146,61 @@ export default function StockMovementForm({
           </div>
         ) : (
           <div className="relative">
-            <input
-              type="text"
-              placeholder="Type product name..."
-              value={search}
-              onFocus={() => setShowDropdown(true)}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setSelectedProduct(null);
-                setShowDropdown(true);
-              }}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
-              required
-            />
+            <div className="relative">
+              <Search
+                size={16}
+                className="absolute left-3 top-3 text-gray-400"
+              />
+              <input
+                type="text"
+                placeholder="Search by product name or SKU..."
+                value={search}
+                onFocus={() => setShowDropdown(true)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setSelectedProduct(null);
+                  setShowDropdown(true);
+                }}
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DFCDC1]"
+                required
+              />
+            </div>
 
             <AnimatePresence>
               {search && showDropdown && (
-                <motion.ul
+                <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute z-10 border rounded mt-1 max-h-40 overflow-auto bg-white w-full"
+                  className="absolute z-10 border border-gray-200 rounded-lg mt-1 max-h-48 overflow-auto bg-white w-full shadow-lg"
                 >
                   {products
-                    .filter((p) =>
-                      p.name.toLowerCase().includes(search.toLowerCase())
+                    .filter(
+                      (p) =>
+                        p.name.toLowerCase().includes(search.toLowerCase()) ||
+                        p.sku.toLowerCase().includes(search.toLowerCase())
                     )
                     .map((p) => (
-                      <li
+                      <button
+                        type="button"
                         key={p.id}
-                        className="p-2 hover:bg-gray-100 cursor-pointer"
+                        className="w-full text-left px-4 py-2 hover:bg-gray-100 transition border-b border-gray-100 last:border-b-0"
                         onClick={() => {
                           setSelectedProduct(p);
                           setSearch(p.name);
                           setShowDropdown(false);
                         }}
                       >
-                        {p.name}
-                      </li>
+                        <p className="text-sm font-medium text-gray-900">
+                          {p.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          SKU: {p.sku} • Stock: {p.stock}
+                        </p>
+                      </button>
                     ))}
-                </motion.ul>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>

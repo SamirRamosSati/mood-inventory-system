@@ -18,7 +18,6 @@ export async function PUT(req: NextRequest) {
 
     const adminClient = createAdminClient();
 
-    // Check if email is being changed and if it's already in use
     if (email !== user.email) {
       const { data: existingUser } = await adminClient
         .from("users")

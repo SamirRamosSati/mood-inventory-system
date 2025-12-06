@@ -5,6 +5,7 @@ import AddButton from "@/components/AddButton";
 import Table from "@/components/Table";
 import Modal from "@/components/modal";
 import Dialog from "@/components/Dialog";
+import Card from "@/components/Card";
 import CustomTabs from "@/components/stockMovements/customTabs";
 import RowActions from "@/components/stockMovements/RowActions";
 import StockMovementForm from "@/components/stockMovements/stockMovement-form";
@@ -304,13 +305,17 @@ export default function StockMovementsPage() {
 
   return (
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
-      <div className="flex-1 flex flex-col min-h-0">
-        <CustomTabs
-          tabs={tabs}
-          rightElement={RightElements}
-          onTabChange={setActiveTab}
-        />
-      </div>
+      <Card>
+        <div className="flex flex-col gap-4 h-full">
+          <div className="flex-1 flex flex-col min-h-0">
+            <CustomTabs
+              tabs={tabs}
+              rightElement={RightElements}
+              onTabChange={setActiveTab}
+            />
+          </div>
+        </div>
+      </Card>
 
       {(() => {
         const filtered = filteredMovements.filter((m) => m.type === activeTab);

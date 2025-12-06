@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/authContext";
+import { useRouter } from "next/navigation";
 import StatCard from "@/components/dashboard/Card";
 import { RecentMovements } from "@/components/dashboard/recentMovements";
 import LowStockList from "@/components/dashboard/lowStock";
@@ -12,6 +13,7 @@ import {
   ApiResponse,
   MovementWithRelations,
   MovementType,
+  Delivery,
 } from "@/types";
 
 interface RecentMovement {
@@ -24,6 +26,7 @@ interface RecentMovement {
 
 export default function DashboardPage() {
   useAuth();
+  const router = useRouter();
 
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -57,6 +60,14 @@ export default function DashboardPage() {
         const resMovements = await fetch("/api/stockMovements");
         const dataMovements: ApiResponse<MovementWithRelations[]> =
           await resMovements.json();
+
+        // Fetch deliveries
+        const resDeliveries = await fetch(
+          "/api/deliveries?status=pending&pageSize=100"
+        );
+        const dataDeliveries: ApiResponse<Delivery[]> =
+          await resDeliveries.json();
+
         if (dataMovements.data) {
           const mapToRecent = (m: MovementWithRelations): RecentMovement => {
             const idValue =
@@ -124,10 +135,9 @@ export default function DashboardPage() {
           }));
         setLowStockProducts(lowStockItems.slice(0, 5));
 
-        const pendingDeliveries = dataMovements.data!.filter(
-          (movement: MovementWithRelations) =>
-            movement.type === "ARRIVAL" && !movement.arrivalDate
-        ).length;
+        const pendingDeliveries = dataDeliveries.data
+          ? dataDeliveries.data.length
+          : 0;
         setStats((prev) => ({
           ...prev,
           pendingDeliveries,
@@ -187,6 +197,7 @@ export default function DashboardPage() {
             icon={<Truck className="w-6 h-6 text-purple-600" />}
             valueColor="text-purple-600"
             iconBg="bg-purple-50"
+            onClick={() => router.push("/deliveries")}
           />
         </div>
 

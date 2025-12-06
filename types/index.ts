@@ -117,6 +117,53 @@ export interface MovementFormData {
   customerName?: string;
 }
 
+// Delivery Item type
+export interface DeliveryItem {
+  product_id: string;
+  product_name?: string;
+  quantity: number;
+  sku?: string;
+}
+
+// Delivery types
+export interface Delivery {
+  id: string;
+  created_by: string;
+  customer_name: string;
+  customer_phone: string;
+  delivery_address: string;
+  scheduled_date: string | null;
+  notes?: string | null;
+  items: DeliveryItem[];
+  status: "pending" | "completed" | "paid";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateDeliveryData {
+  customer_name: string;
+  customer_phone: string;
+  delivery_address: string;
+  scheduled_date?: string | null;
+  notes?: string;
+  items: DeliveryItem[];
+}
+
+export interface UpdateDeliveryData extends Partial<CreateDeliveryData> {
+  scheduled_date?: string | null;
+}
+
+// Notification types
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: "delivery_created" | "delivery_completed" | "delivery_paid";
+  delivery_id: string;
+  title: string;
+  message: string;
+  read_at?: string | null;
+  created_at: string;
+}
 export interface MovementWithRelations extends Movement {
   product?: Product;
   user?: User & Record<string, unknown>;

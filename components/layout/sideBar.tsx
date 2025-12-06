@@ -73,7 +73,7 @@ export default function Sidebar({ linkItems }: SidebarProps) {
         </button>
         <button
           className="flex items-center w-full p-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 transition-colors"
-          onClick={() => router.push("/admin/notifications")}
+          onClick={() => router.push("/notifications")}
         >
           <LucideIcons.BellRingIcon className="w-5 h-5 mr-3" />
           Notifications

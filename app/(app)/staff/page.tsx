@@ -221,44 +221,46 @@ export default function StaffPage() {
   );
 
   return (
-    <div className="p-2 md:p-6 space-y-4 md:space-y-6 flex flex-col h-full">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-          <SearchBar onSearch={handleSearch} placeholder="Search..." />
-          <Filters
-            filters={[
-              {
-                options: duties.map((d) => ({ label: d, value: d })),
-                selected: duty,
-                placeholder: "Filter",
-                onChange: handleDutyChange,
-              },
-            ]}
-          />
-        </div>
-        <AddButton
-          label="Add Employee"
-          onClick={() => {
-            setEditingEmployee(null);
-            setIsModalOpen(true);
-          }}
-        />
-      </div>
+    <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
+      <Card>
+        <div className="flex flex-col gap-4 h-full">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto flex-1">
+              <SearchBar onSearch={handleSearch} placeholder="Search..." />
+              <Filters
+                filters={[
+                  {
+                    options: duties.map((d) => ({ label: d, value: d })),
+                    selected: duty,
+                    placeholder: "Filter",
+                    onChange: handleDutyChange,
+                  },
+                ]}
+              />
+            </div>
+            <AddButton
+              label="Add Employee"
+              onClick={() => {
+                setEditingEmployee(null);
+                setIsModalOpen(true);
+              }}
+            />
+          </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
-        <Card>
           <div className="pb-4 text-sm text-gray-500 font-medium">
             Items found: {filtered.length}
           </div>
 
-          <StaffTable
-            employees={paginated}
-            loading={loading}
-            onEdit={handleEditEmployee}
-            onDelete={handleDeleteEmployee}
-          />
-        </Card>
-      </div>
+          <div className="flex-1 flex flex-col min-h-0">
+            <StaffTable
+              employees={paginated}
+              loading={loading}
+              onEdit={handleEditEmployee}
+              onDelete={handleDeleteEmployee}
+            />
+          </div>
+        </div>
+      </Card>
 
       <PaginationControls
         currentPage={currentPage}

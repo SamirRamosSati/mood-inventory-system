@@ -227,54 +227,54 @@ export default function ProductsPage() {
 
   return (
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
-      {" "}
-      <div className="flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-4">
-          {" "}
-          <SearchBar onSearch={handleSearch} />
-          <Filters
-            filters={[
-              {
-                options: brands
-                  .filter((b): b is string => b !== null && b !== undefined)
-                  .map((b) => ({ label: b, value: b })),
-                selected: brand,
-                placeholder: "All brands",
-                onChange: setBrand,
-              },
-              {
-                options: categories
-                  .filter((c): c is string => c !== null && c !== undefined)
-                  .map((c) => ({ label: c, value: c })),
-                selected: category,
-                placeholder: "All categories",
-                onChange: setCategory,
-              },
-            ]}
-          />
-        </div>
+      <Card>
+        <div className="flex flex-col gap-4 h-full">
+          <div className="flex items-center justify-between flex-shrink-0 flex-col sm:flex-row gap-4">
+            <div className="flex items-center gap-4 flex-1 flex-col sm:flex-row">
+              <SearchBar onSearch={handleSearch} />
+              <Filters
+                filters={[
+                  {
+                    options: brands
+                      .filter((b): b is string => b !== null && b !== undefined)
+                      .map((b) => ({ label: b, value: b })),
+                    selected: brand,
+                    placeholder: "All brands",
+                    onChange: setBrand,
+                  },
+                  {
+                    options: categories
+                      .filter((c): c is string => c !== null && c !== undefined)
+                      .map((c) => ({ label: c, value: c })),
+                    selected: category,
+                    placeholder: "All categories",
+                    onChange: setCategory,
+                  },
+                ]}
+              />
+            </div>
 
-        <AddButton
-          label="Add Product"
-          onClick={() => {
-            setEditingProduct(null);
-            setIsModalOpen(true);
-          }}
-        />
-      </div>
-      <div className="flex-1 flex flex-col min-h-0">
-        <Card>
-          {loading ? (
-            <p className="text-gray-500">Loading...</p>
-          ) : filtered.length === 0 ? (
-            <p className="text-gray-400">No products found.</p>
-          ) : (
-            <>
-              <Table columns={columns} data={paginated} />
-            </>
-          )}
-        </Card>
-      </div>
+            <AddButton
+              label="Add Product"
+              onClick={() => {
+                setEditingProduct(null);
+                setIsModalOpen(true);
+              }}
+            />
+          </div>
+          <div className="flex-1 flex flex-col min-h-0">
+            {loading ? (
+              <p className="text-gray-500">Loading...</p>
+            ) : filtered.length === 0 ? (
+              <p className="text-gray-400">No products found.</p>
+            ) : (
+              <>
+                <Table columns={columns} data={paginated} />
+              </>
+            )}
+          </div>
+        </div>
+      </Card>
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}

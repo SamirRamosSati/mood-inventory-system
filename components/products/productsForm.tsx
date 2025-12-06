@@ -39,7 +39,6 @@ export default function ProductForm({
   const brandWrapperRef = useRef<HTMLDivElement>(null);
   const categoryWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Handle click outside to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;

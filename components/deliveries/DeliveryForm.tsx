@@ -66,7 +66,6 @@ export default function DeliveryForm({
           name="customer_name"
           defaultValue={delivery?.customer_name || ""}
           required
-          placeholder="E.g. John Smith"
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
         />
       </div>
@@ -80,7 +79,6 @@ export default function DeliveryForm({
           name="customer_phone"
           defaultValue={delivery?.customer_phone || ""}
           required
-          placeholder="E.g. (11) 98765-4321"
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
         />
       </div>
@@ -94,7 +92,6 @@ export default function DeliveryForm({
           name="delivery_address"
           defaultValue={delivery?.delivery_address || ""}
           required
-          placeholder="E.g. Street A, 123 - São Paulo, SP"
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
         />
       </div>

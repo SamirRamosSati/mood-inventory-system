@@ -166,7 +166,7 @@ export default function Navbar() {
                       <button
                         key={notification.id}
                         onClick={() => {
-                          router.push("/deliveries");
+                          router.push("/notifications");
                           setIsNotificationDropdownOpen(false);
                         }}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-start gap-3 transition border-b border-gray-100 last:border-b-0"

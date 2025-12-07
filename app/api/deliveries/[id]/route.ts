@@ -26,6 +26,31 @@ export async function PUT(
     const body: UpdateDeliveryData = await request.json();
     const { id } = await params;
 
+    // Verify the delivery exists and belongs to the user
+    const { data: delivery, error: fetchError } = await adminClient
+      .from("deliveries")
+      .select("userId")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !delivery) {
+      return NextResponse.json<ApiResponse>(
+        { success: false, error: "Delivery not found" },
+        { status: 404 }
+      );
+    }
+
+    // Check if user owns this delivery
+    if (delivery.userId !== user.id) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          error: "You don't have permission to update this delivery",
+        },
+        { status: 403 }
+      );
+    }
+
     // Build update object with only provided fields
     const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
@@ -43,23 +68,20 @@ export async function PUT(
     if (body.scheduled_date !== undefined) {
       updateData.scheduled_date = body.scheduled_date;
     }
-    if (body.notes !== undefined) {
-      updateData.notes = body.notes;
-    }
     if (body.items !== undefined) {
       updateData.items = body.items;
     }
 
     // Update delivery
-    const { data: delivery, error: deliveryError } = await adminClient
+    const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
       .update(updateData)
       .eq("id", id)
       .select()
       .single();
 
-    if (deliveryError || !delivery) {
-      console.error("Error updating delivery:", deliveryError);
+    if (updateError || !updatedDelivery) {
+      console.error("Error updating delivery:", updateError);
       return NextResponse.json<ApiResponse>(
         { success: false, error: "Failed to update delivery" },
         { status: 500 }
@@ -69,7 +91,7 @@ export async function PUT(
     return NextResponse.json<ApiResponse<Delivery>>(
       {
         success: true,
-        data: delivery as Delivery,
+        data: updatedDelivery as Delivery,
         message: "Delivery updated successfully",
       },
       { status: 200 }

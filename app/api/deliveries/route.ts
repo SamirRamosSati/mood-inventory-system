@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
     let query = adminClient
       .from("deliveries")
       .select("*", { count: "exact" })
+      .eq("userId", user.id)
       .order("created_at", { ascending: false });
 
     if (status) {
@@ -99,12 +100,12 @@ export async function POST(request: NextRequest) {
     const { data: delivery, error: deliveryError } = await adminClient
       .from("deliveries")
       .insert({
-        created_by: user.id,
+        userId: user.id,
+        created_by_name: user.user_metadata?.name || "Unknown User",
         customer_name: body.customer_name,
         customer_phone: body.customer_phone,
         delivery_address: body.delivery_address,
         scheduled_date: body.scheduled_date || null,
-        notes: body.notes || null,
         items: body.items || [],
         status: "pending",
         created_at: new Date().toISOString(),
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!fetchError && warehouseWorkers && warehouseWorkers.length > 0) {
-      const notifications = warehouseWorkers.map((worker: any) => ({
+      const notifications = warehouseWorkers.map((worker) => ({
         user_id: worker.user_id,
         type: "delivery_created",
         delivery_id: delivery.id,

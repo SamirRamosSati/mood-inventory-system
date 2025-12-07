@@ -21,8 +21,7 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    const { data: users, error: usersError } =
-      await adminClient.auth.admin.listUsers();
+    const { data: users } = await adminClient.auth.admin.listUsers();
     const user = users?.users?.find(
       (u) => u.email?.toLowerCase() === email.toLowerCase()
     );

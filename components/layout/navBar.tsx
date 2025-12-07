@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/authContext";
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { getAvatarInitials, getAvatarStyle } from "@/lib/avatarUtils";
+import { formatRelativeTime } from "@/lib/utils";
 import { Notification, ApiResponse } from "@/types";
 
 export default function Navbar() {
@@ -183,14 +184,7 @@ export default function Navbar() {
                             {notification.message}
                           </p>
                           <p className="text-xs text-gray-400 mt-1">
-                            {new Date(
-                              notification.created_at
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                            {formatRelativeTime(notification.created_at)}
                           </p>
                         </div>
                       </button>

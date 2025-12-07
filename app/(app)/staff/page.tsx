@@ -10,8 +10,8 @@ import Dialog from "@/components/Dialog";
 import EmployeeForm from "@/components/staff/staffForm";
 import StaffTable, { Employee } from "@/components/staff/staffTable";
 import PaginationControls from "@/components/paginationControl";
-import { useDialog } from "@/hooks/useDialog";
-import { DialogVariant } from "@/hooks/useDialog";
+import { useDialog } from "@/contexts/dialogContext";
+import { DialogVariant } from "@/contexts/dialogContext";
 import toast from "react-hot-toast";
 
 export default function StaffPage() {
@@ -224,7 +224,7 @@ export default function StaffPage() {
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
       <Card>
         <div className="flex flex-col gap-4 h-full">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto flex-1">
               <SearchBar onSearch={handleSearch} placeholder="Search..." />
               <Filters

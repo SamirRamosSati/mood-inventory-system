@@ -38,6 +38,17 @@ export async function PUT(
       );
     }
 
+    // Check if user owns this delivery
+    if (delivery.userId !== user.id) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          error: "You don't have permission to update this delivery",
+        },
+        { status: 403 }
+      );
+    }
+
     // Update delivery status to completed
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
@@ -66,7 +77,7 @@ export async function PUT(
     console.log("Managers found:", managers, "Error:", fetchManagersError);
 
     if (!fetchManagersError && managers && managers.length > 0) {
-      const notifications = managers.map((manager: any) => ({
+      const notifications = managers.map((manager) => ({
         user_id: manager.user_id,
         type: "delivery_completed",
         delivery_id: id,

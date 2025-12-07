@@ -1,13 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  Delivery,
-  CreateDeliveryData,
-  DeliveryItem,
-  ApiResponse,
-} from "@/types";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { Delivery, CreateDeliveryData, DeliveryItem } from "@/types";
 import DeliveryItemsInput from "./DeliveryItemsInput";
 
 interface DeliveryFormProps {
@@ -40,10 +34,6 @@ export default function DeliveryForm({
 
     const form = e.target as HTMLFormElement;
 
-    const notesValue = (
-      form.elements.namedItem("notes") as HTMLTextAreaElement
-    ).value.trim();
-
     const payload: CreateDeliveryData = {
       customer_name: (
         form.elements.namedItem("customer_name") as HTMLInputElement
@@ -59,7 +49,6 @@ export default function DeliveryForm({
         : (
             form.elements.namedItem("scheduled_date") as HTMLInputElement
           ).value.trim() || null,
-      notes: notesValue || "",
       items,
     };
 
@@ -144,19 +133,6 @@ export default function DeliveryForm({
 
       {/* Items Input */}
       <DeliveryItemsInput items={items} onChange={setItems} />
-
-      <div>
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          Notes
-        </label>
-        <textarea
-          name="notes"
-          defaultValue={delivery?.notes || ""}
-          placeholder="Add any additional information..."
-          rows={4}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
-        />
-      </div>
 
       {formError && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">

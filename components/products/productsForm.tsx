@@ -31,8 +31,10 @@ export default function ProductForm({
   const [formError, setFormError] = useState<string | null>(error);
   const [brands, setBrands] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [brandSearch, setBrandSearch] = useState(product?.brand || "");
-  const [categorySearch, setCategorySearch] = useState(product?.category || "");
+  const [brandSearch, setBrandSearch] = useState<string>(product?.brand || "");
+  const [categorySearch, setCategorySearch] = useState<string>(
+    product?.category || ""
+  );
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
@@ -96,13 +98,6 @@ export default function ProductForm({
     }
     loadBrandsAndCategories();
   }, []);
-
-  useEffect(() => {
-    if (product) {
-      setBrandSearch(product.brand || "");
-      setCategorySearch(product.category || "");
-    }
-  }, [product]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

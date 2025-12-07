@@ -12,8 +12,8 @@ import StockMovementForm from "@/components/stockMovements/stockMovement-form";
 import Filters from "@/components/Filters";
 import PaginationControls from "@/components/paginationControl";
 import { MovementWithRelations, TableColumn, ApiResponse } from "@/types";
-import { useDialog } from "@/hooks/useDialog";
-import { DialogVariant } from "@/hooks/useDialog";
+import { useDialog } from "@/contexts/dialogContext";
+import { DialogVariant } from "@/contexts/dialogContext";
 import toast from "react-hot-toast";
 import {
   MOVEMENT_COLUMNS_MAP,

@@ -8,13 +8,17 @@ import DeliveriesTable from "@/components/deliveries/DeliveriesTable";
 import PaginationControls from "@/components/paginationControl";
 import DeliveryForm from "@/components/deliveries/DeliveryForm";
 import Modal from "@/components/modal";
+import Dialog from "@/components/Dialog";
 import toast from "react-hot-toast";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 import { Delivery, CreateDeliveryData, ApiResponse } from "@/types";
 import { Loader2 } from "lucide-react";
+import { useDialog } from "@/contexts/dialogContext";
+import { DialogVariant } from "@/contexts/dialogContext";
 
 export default function DeliveriesPage() {
+  const dialog = useDialog();
   const [activeTab, setActiveTab] = useState("pending");
   const [search, setSearch] = useState("");
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -182,7 +186,7 @@ export default function DeliveriesPage() {
             onValueChange={handleTabChange}
             className="flex flex-col gap-3 h-full"
           >
-            <div className="flex justify-between items-center flex-shrink-0">
+            <div className="flex justify-between items-center shrink-0">
               <TabsPrimitive.List className="flex gap-2">
                 <TabsPrimitive.Trigger
                   value="pending"
@@ -289,6 +293,34 @@ export default function DeliveriesPage() {
           error={error}
         />
       </Modal>
+
+      <Dialog
+        isOpen={dialog.config.isOpen}
+        title={dialog.config.title}
+        description={dialog.config.description}
+        onClose={dialog.close}
+        primaryAction={
+          dialog.config.primaryAction
+            ? {
+                label: dialog.config.primaryAction.label,
+                variant: dialog.config.primaryAction.variant as DialogVariant,
+                onClick: dialog.onPrimary || (() => {}),
+                loading: dialog.config.primaryAction.loading,
+              }
+            : undefined
+        }
+        secondaryAction={
+          dialog.config.secondaryAction
+            ? {
+                label: dialog.config.secondaryAction.label,
+                onClick: dialog.onSecondary || (() => {}),
+              }
+            : undefined
+        }
+        closeOnClickOutside={dialog.config.closeOnClickOutside}
+      >
+        {dialog.config.children}
+      </Dialog>
     </div>
   );
 }

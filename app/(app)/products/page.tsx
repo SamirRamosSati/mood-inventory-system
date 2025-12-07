@@ -12,8 +12,8 @@ import RowActions from "@/components/stockMovements/RowActions";
 import ProductForm from "@/components/products/productsForm";
 import PaginationControls from "@/components/paginationControl";
 import { Product, ApiResponse } from "@/types";
-import { useDialog } from "@/hooks/useDialog";
-import { DialogVariant } from "@/hooks/useDialog";
+import { useDialog } from "@/contexts/dialogContext";
+import { DialogVariant } from "@/contexts/dialogContext";
 import toast from "react-hot-toast";
 
 interface ProductFormData {
@@ -229,7 +229,7 @@ export default function ProductsPage() {
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
       <Card>
         <div className="flex flex-col gap-4 h-full">
-          <div className="flex items-center justify-between flex-shrink-0 flex-col sm:flex-row gap-4">
+          <div className="flex items-center justify-between shrink-0 flex-col sm:flex-row gap-4">
             <div className="flex items-center gap-4 flex-1 flex-col sm:flex-row">
               <SearchBar onSearch={handleSearch} />
               <Filters
@@ -264,7 +264,9 @@ export default function ProductsPage() {
           </div>
           <div className="flex-1 flex flex-col min-h-0">
             {loading ? (
-              <p className="text-gray-500">Loading...</p>
+              <div className="flex items-center justify-center flex-1">
+                <p className="text-gray-500">Loading...</p>
+              </div>
             ) : filtered.length === 0 ? (
               <p className="text-gray-400">No products found.</p>
             ) : (

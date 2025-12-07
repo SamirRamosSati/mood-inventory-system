@@ -38,6 +38,17 @@ export async function PUT(
       );
     }
 
+    // Check if user owns this delivery
+    if (delivery.userId !== user.id) {
+      return NextResponse.json<ApiResponse>(
+        {
+          success: false,
+          error: "You don't have permission to update this delivery",
+        },
+        { status: 403 }
+      );
+    }
+
     // Update delivery status to paid
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
@@ -65,7 +76,7 @@ export async function PUT(
     console.log("All staff found:", allUsers, "Error:", fetchUsersError);
 
     if (!fetchUsersError && allUsers && allUsers.length > 0) {
-      const notifications = allUsers.map((user: any) => ({
+      const notifications = allUsers.map((user) => ({
         user_id: user.user_id,
         type: "delivery_paid",
         delivery_id: id,

@@ -17,7 +17,11 @@ export default function DeliveriesTable({
   loading,
 }: DeliveriesTableProps) {
   if (loading) {
-    return <div className="py-8 text-center text-gray-500">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64 text-gray-500">
+        Loading...
+      </div>
+    );
   }
 
   if (deliveries.length === 0) {
@@ -31,7 +35,7 @@ export default function DeliveriesTable({
       return "To be announced";
     }
     try {
-      return new Date(dateString).toLocaleDateString("pt-BR");
+      return new Date(dateString).toLocaleDateString("en-US");
     } catch {
       return dateString;
     }
@@ -50,7 +54,9 @@ export default function DeliveriesTable({
             <th className="p-3 text-sm font-semibold text-gray-900">Date</th>
             <th className="p-3 text-sm font-semibold text-gray-900">Items</th>
             <th className="p-3 text-sm font-semibold text-gray-900">Status</th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Created</th>
+            <th className="p-3 text-sm font-semibold text-gray-900">
+              Created by
+            </th>
             <th className="p-3 text-sm font-semibold text-gray-900">Action</th>
           </tr>
         </thead>
@@ -112,7 +118,7 @@ export default function DeliveriesTable({
                 </span>
               </td>
               <td className="p-3 text-sm text-gray-600">
-                {formatDate(delivery.created_at)}
+                {delivery.created_by_name || "Unknown"}
               </td>
               <td className="p-3">
                 <RowActions

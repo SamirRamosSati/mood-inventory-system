@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
+import { useDialog } from "@/contexts/dialogContext";
 
 import { MovementWithRelations, MovementFormData, MovementType } from "@/types";
 
@@ -23,6 +24,7 @@ export default function StockMovementForm({
   onSubmit,
   onCancel,
 }: StockMovementFormProps) {
+  const dialog = useDialog();
   const formatDate = (d?: string | Date | null) => {
     if (!d) return "";
     try {
@@ -103,7 +105,13 @@ export default function StockMovementForm({
   // 🔹 Submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!selectedProduct) return alert("Please select a valid product");
+    if (!selectedProduct) {
+      dialog.alert(
+        "Please select a product",
+        "You must select a product before submitting the form."
+      );
+      return;
+    }
 
     const form = e.target as typeof e.target & {
       quantity: { value: string };

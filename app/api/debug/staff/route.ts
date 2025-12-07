@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ApiResponse } from "@/types";
 
 const adminClient = createAdminClient();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get all staff profiles
     const { data: allStaff, error: allError } = await adminClient

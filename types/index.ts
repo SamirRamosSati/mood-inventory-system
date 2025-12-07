@@ -128,12 +128,12 @@ export interface DeliveryItem {
 // Delivery types
 export interface Delivery {
   id: string;
-  created_by: string;
+  userId: string;
+  created_by_name: string;
   customer_name: string;
   customer_phone: string;
   delivery_address: string;
   scheduled_date: string | null;
-  notes?: string | null;
   items: DeliveryItem[];
   status: "pending" | "completed" | "paid";
   created_at: string;
@@ -145,7 +145,6 @@ export interface CreateDeliveryData {
   customer_phone: string;
   delivery_address: string;
   scheduled_date?: string | null;
-  notes?: string;
   items: DeliveryItem[];
 }
 

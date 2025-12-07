@@ -27,7 +27,11 @@ export default function StaffTable({
   onDelete,
 }: StaffTableProps) {
   if (loading) {
-    return <div className="py-8 text-center text-gray-500">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64 text-gray-500">
+        Loading...
+      </div>
+    );
   }
 
   if (employees.length === 0) {

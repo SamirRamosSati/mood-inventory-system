@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import Sidebar, { SidebarLinkItem } from "@/components/layout/sideBar";
 import Navbar from "@/components/layout/navBar";
 import { useAuth, AuthProvider } from "@/contexts/authContext";
+import { DialogProvider } from "@/contexts/dialogContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useRouter } from "next/navigation";
 
@@ -55,7 +56,9 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <AppLayoutContent>{children}</AppLayoutContent>
+      <DialogProvider>
+        <AppLayoutContent>{children}</AppLayoutContent>
+      </DialogProvider>
     </AuthProvider>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Pencil, Check, CheckCheck, Trash } from "lucide-react";
 import { Delivery } from "@/types";
 import toast from "react-hot-toast";
+import { useDialog } from "@/contexts/dialogContext";
 
 interface DeliveryRowActionsProps {
   delivery: Delivery;
@@ -16,6 +17,7 @@ export default function DeliveryRowActions({
   onEdit,
   onRefresh,
 }: DeliveryRowActionsProps) {
+  const dialog = useDialog();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -54,18 +56,19 @@ export default function DeliveryRowActions({
 
       const json = await response.json();
       if (!response.ok) {
-        toast.error(json.error || "Error marking as completed");
+        setLoading(false);
+        dialog.alert("Error", json.error || "Error marking as completed");
         return;
       }
 
       toast.success("Delivery marked as completed");
+      setLoading(false);
       setOpen(false);
       onRefresh();
     } catch (error) {
-      toast.error("Error marking as completed");
-      console.error(error);
-    } finally {
       setLoading(false);
+      dialog.alert("Error", "Error marking as completed");
+      console.error(error);
     }
   };
 
@@ -78,25 +81,34 @@ export default function DeliveryRowActions({
 
       const json = await response.json();
       if (!response.ok) {
-        toast.error(json.error || "Error marking as paid");
+        setLoading(false);
+        dialog.alert("Error", json.error || "Error marking as paid");
         return;
       }
 
       toast.success("Delivery marked as paid");
+      setLoading(false);
       setOpen(false);
       onRefresh();
     } catch (error) {
-      toast.error("Error marking as paid");
-      console.error(error);
-    } finally {
       setLoading(false);
+      dialog.alert("Error", "Error marking as paid");
+      console.error(error);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this delivery?")) {
-      return;
-    }
+    const confirmed = await dialog.confirm(
+      "Delete Delivery?",
+      "This will permanently remove the delivery record. This action cannot be undone.",
+      {
+        primaryLabel: "Delete",
+        secondaryLabel: "Cancel",
+        variant: "danger",
+      }
+    );
+
+    if (!confirmed) return;
 
     setLoading(true);
     try {
@@ -106,18 +118,19 @@ export default function DeliveryRowActions({
 
       const json = await response.json();
       if (!response.ok) {
-        toast.error(json.error || "Error deleting delivery");
+        setLoading(false);
+        dialog.alert("Error", json.error || "Error deleting delivery");
         return;
       }
 
       toast.success("Delivery deleted successfully");
+      setLoading(false);
       setOpen(false);
       onRefresh();
     } catch (error) {
-      toast.error("Error deleting delivery");
-      console.error(error);
-    } finally {
       setLoading(false);
+      dialog.alert("Error", "Error deleting delivery");
+      console.error(error);
     }
   };
 

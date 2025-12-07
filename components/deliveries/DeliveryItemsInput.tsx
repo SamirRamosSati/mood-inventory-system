@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Product } from "@/types";
 import { X, Search } from "lucide-react";
 
@@ -22,7 +22,6 @@ export default function DeliveryItemsInput({
 }: DeliveryItemsInputProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -46,10 +45,9 @@ export default function DeliveryItemsInput({
   }, []);
 
   // Filter products based on search term
-  useEffect(() => {
+  const filteredProductsList = useMemo(() => {
     if (searchTerm.trim() === "") {
-      setFilteredProducts([]);
-      return;
+      return [];
     }
 
     const filtered = products.filter((p) => {
@@ -66,7 +64,7 @@ export default function DeliveryItemsInput({
       );
     });
 
-    setFilteredProducts(filtered);
+    return filtered;
   }, [searchTerm, products, items]);
 
   // Close dropdown on outside click
@@ -180,9 +178,9 @@ export default function DeliveryItemsInput({
         </div>
 
         {/* Dropdown */}
-        {showDropdown && filteredProducts.length > 0 && (
+        {showDropdown && filteredProductsList.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
-            {filteredProducts.map((product) => (
+            {filteredProductsList.map((product) => (
               <button
                 type="button"
                 key={product.id}
@@ -200,7 +198,7 @@ export default function DeliveryItemsInput({
           </div>
         )}
 
-        {showDropdown && searchTerm && filteredProducts.length === 0 && (
+        {showDropdown && searchTerm && filteredProductsList.length === 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4 text-center text-sm text-gray-500">
             No products found
           </div>

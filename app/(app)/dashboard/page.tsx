@@ -15,6 +15,7 @@ import {
   MovementType,
   Delivery,
 } from "@/types";
+import { formatRelativeTime } from "@/lib/utils";
 
 interface RecentMovement {
   id: string | number;
@@ -76,24 +77,7 @@ export default function DashboardPage() {
                 : m.id;
             const productName =
               m.productName ?? m.product?.name ?? m.product ?? m.product;
-            const time = (() => {
-              const date = m.createdAt
-                ? new Date(m.createdAt)
-                : m.arrivalDate
-                ? new Date(m.arrivalDate)
-                : null;
-              if (!date || isNaN(date.getTime())) return "";
-              const now = new Date();
-              const diff = now.getTime() - date.getTime();
-              if (diff < 0) return "just now";
-              const minutes = Math.floor(diff / (1000 * 60));
-              const hours = Math.floor(diff / (1000 * 60 * 60));
-              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-              if (minutes < 1) return "just now";
-              if (minutes < 60) return `${minutes} min ago`;
-              if (hours < 24) return `${hours}h ago`;
-              return `${days}d ago`;
-            })();
+            const time = formatRelativeTime(m.createdAt || m.arrivalDate);
 
             return {
               id: idValue,

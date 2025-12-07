@@ -35,7 +35,7 @@ export default function CustomTabs({
       onValueChange={handleTabChange}
       className="flex flex-col gap-3 h-full"
     >
-      <div className="flex justify-between items-center flex-shrink-0">
+      <div className="flex justify-between items-center shrink-0">
         <TabsPrimitive.List className="flex gap-2">
           {tabs.map((t) => (
             <TabsPrimitive.Trigger
@@ -66,7 +66,9 @@ export default function CustomTabs({
               style={{ display: isActive ? "block" : "none" }}
             >
               {t.isLoading ? (
-                <p className="text-center py-8 text-gray-400">Loading...</p>
+                <div className="flex items-center justify-center h-40 text-gray-400">
+                  Loading...
+                </div>
               ) : t.dataLength === 0 ? (
                 <p className="text-center py-8 text-gray-400">
                   No movements to fetch

@@ -209,7 +209,7 @@ export default function DeliveriesPage() {
                       : "bg-[#F5F5F5] text-gray-700 hover:bg-[#E0D7CF]"
                   )}
                 >
-                  Done Deliveries
+                  Completed Deliveries
                 </TabsPrimitive.Trigger>
 
                 <TabsPrimitive.Trigger
@@ -255,6 +255,7 @@ export default function DeliveriesPage() {
                   deliveries={paginated}
                   onEdit={handleEdit}
                   onRefresh={handleRefresh}
+                  status={activeTab as "pending" | "completed" | "paid"}
                 />
               )}
             </div>

@@ -54,6 +54,7 @@ export async function PUT(
       .from("deliveries")
       .update({
         status: "completed",
+        completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)

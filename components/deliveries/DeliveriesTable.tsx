@@ -8,6 +8,7 @@ interface DeliveriesTableProps {
   onEdit: (delivery: Delivery) => void;
   onRefresh: () => void;
   loading?: boolean;
+  status?: "pending" | "completed" | "paid";
 }
 
 export default function DeliveriesTable({
@@ -15,6 +16,7 @@ export default function DeliveriesTable({
   onEdit,
   onRefresh,
   loading,
+  status = "pending",
 }: DeliveriesTableProps) {
   if (loading) {
     return (
@@ -32,7 +34,7 @@ export default function DeliveriesTable({
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) {
-      return "To be announced";
+      return "Date pending";
     }
     try {
       return new Date(dateString).toLocaleDateString("en-US");
@@ -51,7 +53,14 @@ export default function DeliveriesTable({
             </th>
             <th className="p-3 text-sm font-semibold text-gray-900">Phone</th>
             <th className="p-3 text-sm font-semibold text-gray-900">Address</th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Date</th>
+            {status !== "completed" && (
+              <th className="p-3 text-sm font-semibold text-gray-900">Date</th>
+            )}
+            {status === "completed" && (
+              <th className="p-3 text-sm font-semibold text-gray-900">
+                Completed At
+              </th>
+            )}
             <th className="p-3 text-sm font-semibold text-gray-900">Items</th>
             <th className="p-3 text-sm font-semibold text-gray-900">Status</th>
             <th className="p-3 text-sm font-semibold text-gray-900">
@@ -76,9 +85,20 @@ export default function DeliveriesTable({
               <td className="p-3 text-sm text-gray-600">
                 {delivery.delivery_address}
               </td>
-              <td className="p-3 text-sm text-gray-600">
-                {formatDate(delivery.scheduled_date)}
-              </td>
+              {status !== "completed" && (
+                <td className="p-3 text-sm text-gray-600">
+                  {formatDate(delivery.scheduled_date)}
+                </td>
+              )}
+              {status === "completed" && (
+                <td className="p-3 text-sm text-gray-600">
+                  {delivery.completed_at
+                    ? new Date(delivery.completed_at).toLocaleDateString(
+                        "en-US"
+                      )
+                    : ""}
+                </td>
+              )}
               <td className="p-3">
                 <div className="text-xs">
                   {Array.isArray(delivery.items) &&

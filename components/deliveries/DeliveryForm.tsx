@@ -21,7 +21,9 @@ export default function DeliveryForm({
 }: DeliveryFormProps) {
   const [formError, setFormError] = useState<string | null>(error);
   const [items, setItems] = useState<DeliveryItem[]>(delivery?.items || []);
-  const [isDateTBA, setIsDateTBA] = useState(!delivery?.scheduled_date);
+  const [isDateTBA, setIsDateTBA] = useState(
+    delivery ? !delivery.scheduled_date : false
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -109,7 +111,7 @@ export default function DeliveryForm({
             htmlFor="isDateTBA"
             className="text-sm font-medium text-gray-700 cursor-pointer"
           >
-            To be announced (Date pending)
+            Date pending
           </label>
         </div>
 

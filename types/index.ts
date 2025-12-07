@@ -136,6 +136,7 @@ export interface Delivery {
   scheduled_date: string | null;
   items: DeliveryItem[];
   status: "pending" | "completed" | "paid";
+  completed_at: string | null;
   created_at: string;
   updated_at: string;
 }

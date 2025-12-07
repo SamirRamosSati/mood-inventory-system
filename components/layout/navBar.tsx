@@ -80,6 +80,17 @@ export default function Navbar() {
     await logout();
   };
 
+  const getPageIcon = (path: string): string => {
+    if (path === "/dashboard") return "📊";
+    if (path.includes("deliveries")) return "🚚";
+    if (path.includes("products")) return "📦";
+    if (path.includes("staff")) return "👥";
+    if (path.includes("stock-movements")) return "📈";
+    if (path.includes("notifications")) return "🔔";
+    if (path.includes("account")) return "⚙️";
+    return "📄";
+  };
+
   const getPageTitle = (
     path: string
   ): { title: string; isDashboard: boolean } => {
@@ -104,16 +115,24 @@ export default function Navbar() {
   };
 
   const { title: currentTitle, isDashboard } = getPageTitle(pathname);
+  const pageIcon = getPageIcon(pathname);
 
   return (
     <nav className="bg-[#fafafa] w-full shrink-0 relative z-40">
       <div className="px-4 md:px-10 py-4 md:py-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">{currentTitle}</h1>
-            <p className="text-xs text-gray-500">
-              {isDashboard ? getGreeting() : ""}
-            </p>
+            {isDashboard ? (
+              <>
+                <h1 className="text-2xl font-bold text-gray-900">{currentTitle}</h1>
+                <p className="text-sm text-gray-500 mt-1">{getGreeting()}</p>
+              </>
+            ) : (
+              <div className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-[#DFCDC1] to-[#E8D9CF] rounded-full shadow-sm border border-[#D4B5A0]">
+                <span className="text-lg">{pageIcon}</span>
+                <span className="text-sm font-semibold text-gray-900">{currentTitle}</span>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4">

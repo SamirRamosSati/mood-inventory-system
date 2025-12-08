@@ -158,6 +158,7 @@ export default function DashboardPage() {
               icon={<Box className="w-6 h-6 text-blue-600" />}
               valueColor="text-gray-900"
               iconBg="bg-blue-50"
+              onClick={() => router.push("/products")}
             />
 
             <StatCard
@@ -166,6 +167,7 @@ export default function DashboardPage() {
               icon={<AlertTriangle className="w-5 h-5 text-orange-600" />}
               valueColor="text-orange-600"
               iconBg="bg-orange-50"
+              onClick={() => router.push("/products")}
             />
 
             <StatCard
@@ -174,6 +176,7 @@ export default function DashboardPage() {
               icon={<BarChart2 className="w-6 h-6 text-green-600" />}
               valueColor="text-gray-900"
               iconBg="bg-green-50"
+              onClick={() => router.push("/stockMovements")}
             />
 
             <StatCard

@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
     let query = adminClient
       .from("deliveries")
       .select("*", { count: "exact" })
-      .eq("userId", user.id)
       .order("created_at", { ascending: false });
 
     if (status) {

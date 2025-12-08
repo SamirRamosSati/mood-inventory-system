@@ -247,11 +247,11 @@ export default function StaffPage() {
             />
           </div>
 
-          <div className="pb-4 text-sm text-gray-500 font-medium">
+          <div className="text-sm text-gray-500 font-medium">
             Items found: {filtered.length}
           </div>
 
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1 overflow-auto">
             <StaffTable
               employees={paginated}
               loading={loading}
@@ -259,14 +259,16 @@ export default function StaffPage() {
               onDelete={handleDeleteEmployee}
             />
           </div>
+
+          {!loading && paginated.length > 0 && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </div>
       </Card>
-
-      <PaginationControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
 
       <Modal
         isOpen={isModalOpen}

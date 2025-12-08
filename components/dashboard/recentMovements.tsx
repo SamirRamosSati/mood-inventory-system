@@ -39,13 +39,13 @@ export function RecentMovements({
   return (
     <div className="lg:col-span-2">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-full flex flex-col">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <h3 className="text-md font-semibold text-gray-900">
+        <div className="p-4 sm:p-5 md:p-6 border-b border-gray-200 flex items-center justify-between">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900">
             Recent Movements
           </h3>
           <button
             onClick={() => router.push("/stockMovements")}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
             View all →
           </button>
@@ -53,12 +53,15 @@ export function RecentMovements({
 
         <div className="divide-y divide-gray-200 flex-1 overflow-auto">
           {movements.map((movement) => (
-            <div key={movement.id} className="p-4 hover:bg-gray-50 transition">
+            <div
+              key={movement.id}
+              className="p-3 sm:p-4 hover:bg-gray-50 transition"
+            >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
                     <span
-                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${getMovementColor(
+                      className={`inline-flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getMovementColor(
                         movement.type
                       )}`}
                     >
@@ -73,18 +76,18 @@ export function RecentMovements({
                     </span>
                   </div>
 
-                  <p className="font-medium text-sm text-gray-900">
+                  <p className="font-medium text-xs sm:text-sm text-gray-900">
                     {movement.product}
                   </p>
 
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
                     Quantity:{" "}
                     <span className="font-medium">{movement.quantity}</span>
                     {movement.type === "ARRIVAL" && movement.vendor && (
                       <>
                         {" "}
                         • Vendor:{" "}
-                        <span className="font-medium text-sm">
+                        <span className="font-medium text-xs sm:text-sm">
                           {movement.vendor}
                         </span>
                       </>
@@ -95,7 +98,7 @@ export function RecentMovements({
                         <>
                           {" "}
                           • Customer:{" "}
-                          <span className="font-medium text-sm">
+                          <span className="font-medium text-xs sm:text-sm">
                             {movement.customer}
                           </span>
                         </>

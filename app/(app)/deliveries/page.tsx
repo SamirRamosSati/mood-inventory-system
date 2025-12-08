@@ -259,16 +259,16 @@ export default function DeliveriesPage() {
                 />
               )}
             </div>
-          </TabsPrimitive.Root>
 
-          {/* Pagination */}
-          {!loading && paginated.length > 0 && (
-            <PaginationControls
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          )}
+            {/* Pagination - inside Card */}
+            {!loading && paginated.length > 0 && (
+              <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            )}
+          </TabsPrimitive.Root>
         </div>
       </Card>
 

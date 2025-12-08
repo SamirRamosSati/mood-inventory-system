@@ -314,27 +314,35 @@ export default function StockMovementsPage() {
               onTabChange={setActiveTab}
             />
           </div>
+
+          {(() => {
+            const filtered = filteredMovements.filter(
+              (m) => m.type === activeTab
+            );
+            const page = pageByType[activeTab] ?? 0;
+            const totalPages = Math.max(
+              1,
+              Math.ceil(filtered.length / PAGE_SIZE)
+            );
+
+            return (
+              !isLoading &&
+              filtered.length > 0 && (
+                <PaginationControls
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(newPage) => {
+                    setPageByType((prev) => ({
+                      ...prev,
+                      [activeTab]: newPage,
+                    }));
+                  }}
+                />
+              )
+            );
+          })()}
         </div>
       </Card>
-
-      {(() => {
-        const filtered = filteredMovements.filter((m) => m.type === activeTab);
-        const page = pageByType[activeTab] ?? 0;
-        const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-
-        return (
-          <PaginationControls
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={(newPage) => {
-              setPageByType((prev) => ({
-                ...prev,
-                [activeTab]: newPage,
-              }));
-            }}
-          />
-        );
-      })()}
 
       <Modal
         isOpen={isModalOpen}

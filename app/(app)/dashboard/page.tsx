@@ -148,51 +148,53 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-2 md:p-6 space-y-6">
-      <main className="max-w-[1600px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard
-            title="Total Products"
-            value={stats.totalProducts}
-            icon={<Box className="w-6 h-6 text-blue-600" />}
-            valueColor="text-gray-900"
-            iconBg="bg-blue-50"
-          />
+    <div className="flex flex-col h-full w-full overflow-y-auto">
+      <div className="p-3 sm:p-4 md:p-6 flex-1">
+        <main className="max-w-[1600px] mx-auto flex flex-col space-y-6 md:space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            <StatCard
+              title="Total Products"
+              value={stats.totalProducts}
+              icon={<Box className="w-6 h-6 text-blue-600" />}
+              valueColor="text-gray-900"
+              iconBg="bg-blue-50"
+            />
 
-          <StatCard
-            title="Low Stock Items"
-            value={stats.lowStock}
-            icon={<AlertTriangle className="w-5 h-5 text-orange-600" />}
-            valueColor="text-orange-600"
-            iconBg="bg-orange-50"
-          />
+            <StatCard
+              title="Low Stock Items"
+              value={stats.lowStock}
+              icon={<AlertTriangle className="w-5 h-5 text-orange-600" />}
+              valueColor="text-orange-600"
+              iconBg="bg-orange-50"
+            />
 
-          <StatCard
-            title="Today's Movements"
-            value={stats.todayMovements}
-            icon={<BarChart2 className="w-6 h-6 text-green-600" />}
-            valueColor="text-gray-900"
-            iconBg="bg-green-50"
-          />
+            <StatCard
+              title="Today's Movements"
+              value={stats.todayMovements}
+              icon={<BarChart2 className="w-6 h-6 text-green-600" />}
+              valueColor="text-gray-900"
+              iconBg="bg-green-50"
+            />
 
-          <StatCard
-            title="Pending Deliveries"
-            value={stats.pendingDeliveries}
-            icon={<Truck className="w-6 h-6 text-purple-600" />}
-            valueColor="text-purple-600"
-            iconBg="bg-purple-50"
-            onClick={() => router.push("/deliveries")}
-          />
-        </div>
+            <StatCard
+              title="Pending Deliveries"
+              value={stats.pendingDeliveries}
+              icon={<Truck className="w-6 h-6 text-purple-600" />}
+              valueColor="text-purple-600"
+              iconBg="bg-purple-50"
+              onClick={() => router.push("/deliveries")}
+            />
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <RecentMovements
-            movements={recentMovements}
-            getMovementColor={getMovementColor}
-          />
-          <LowStockList lowStockProducts={lowStockProducts} />
-        </div>
-      </main>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <RecentMovements
+              movements={recentMovements}
+              getMovementColor={getMovementColor}
+            />
+            <LowStockList lowStockProducts={lowStockProducts} />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

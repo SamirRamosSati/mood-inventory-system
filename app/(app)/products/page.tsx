@@ -262,7 +262,7 @@ export default function ProductsPage() {
               }}
             />
           </div>
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1 overflow-auto">
             {loading ? (
               <div className="flex items-center justify-center flex-1">
                 <p className="text-gray-500">Loading...</p>
@@ -270,18 +270,19 @@ export default function ProductsPage() {
             ) : filtered.length === 0 ? (
               <p className="text-gray-400">No products found.</p>
             ) : (
-              <>
-                <Table columns={columns} data={paginated} />
-              </>
+              <Table columns={columns} data={paginated} />
             )}
           </div>
+
+          {!loading && paginated.length > 0 && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </Card>
-      <PaginationControls
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
       <Modal
         isOpen={isModalOpen}
         onClose={handleCancelModal}

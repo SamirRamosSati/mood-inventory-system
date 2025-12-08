@@ -58,7 +58,7 @@ export default function DashboardPage() {
           throw new Error(dataProducts.error || "Failed to fetch products");
         }
 
-        const resMovements = await fetch("/api/stockMovements");
+        const resMovements = await fetch("/api/stockMovements?pageSize=100");
         const dataMovements: ApiResponse<MovementWithRelations[]> =
           await resMovements.json();
 
@@ -88,7 +88,7 @@ export default function DashboardPage() {
             } as RecentMovement;
           };
 
-          setRecentMovements(dataMovements.data.slice(0, 3).map(mapToRecent));
+          setRecentMovements(dataMovements.data.slice(0, 10).map(mapToRecent));
 
           setStats((prev) => ({
             ...prev,
@@ -117,7 +117,7 @@ export default function DashboardPage() {
             category: p.category || null,
             stock: p.stock,
           }));
-        setLowStockProducts(lowStockItems.slice(0, 5));
+        setLowStockProducts(lowStockItems.slice(0, 15));
 
         const pendingDeliveries = dataDeliveries.data
           ? dataDeliveries.data.length
@@ -149,9 +149,9 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col h-full w-full overflow-y-auto">
-      <div className="p-3 sm:p-4 md:p-6 flex-1">
-        <main className="max-w-[1600px] mx-auto flex flex-col space-y-6 md:space-y-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+      <div className="p-3 sm:p-4 md:p-6 flex-1 flex flex-col min-h-0">
+        <main className="max-w-[1600px] mx-auto w-full flex flex-col space-y-6 md:space-y-8 flex-1 min-h-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 shrink-0">
             <StatCard
               title="Total Products"
               value={stats.totalProducts}
@@ -186,7 +186,7 @@ export default function DashboardPage() {
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 flex-1 min-h-0">
             <RecentMovements
               movements={recentMovements}
               getMovementColor={getMovementColor}

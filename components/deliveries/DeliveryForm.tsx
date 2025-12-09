@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Delivery, CreateDeliveryData, DeliveryItem } from "@/types";
 import DeliveryItemsInput from "./DeliveryItemsInput";
+import DatePickerCalendar from "@/components/ui/DatePickerCalendar";
 
 interface DeliveryFormProps {
   delivery?: Delivery | null;
@@ -23,6 +24,9 @@ export default function DeliveryForm({
   const [items, setItems] = useState<DeliveryItem[]>(delivery?.items || []);
   const [isDateTBA, setIsDateTBA] = useState(
     delivery ? !delivery.scheduled_date : false
+  );
+  const [scheduledDate, setScheduledDate] = useState<string | null>(
+    delivery?.scheduled_date || null
   );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,11 +50,7 @@ export default function DeliveryForm({
       delivery_address: (
         form.elements.namedItem("delivery_address") as HTMLInputElement
       ).value.trim(),
-      scheduled_date: isDateTBA
-        ? null
-        : (
-            form.elements.namedItem("scheduled_date") as HTMLInputElement
-          ).value.trim() || null,
+      scheduled_date: isDateTBA ? null : scheduledDate,
       items,
     };
 
@@ -120,11 +120,10 @@ export default function DeliveryForm({
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Scheduled Date
             </label>
-            <input
-              type="date"
-              name="scheduled_date"
-              defaultValue={delivery?.scheduled_date || ""}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+            <DatePickerCalendar
+              value={scheduledDate}
+              onChange={setScheduledDate}
+              placeholder="Select delivery date"
             />
           </div>
         )}

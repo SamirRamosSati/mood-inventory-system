@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
 import { useDialog } from "@/contexts/dialogContext";
+import DatePickerCalendar from "@/components/ui/DatePickerCalendar";
 
 import { MovementWithRelations, MovementFormData, MovementType } from "@/types";
 
@@ -49,6 +50,15 @@ export default function StockMovementForm({
   } | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [arrivalDate, setArrivalDate] = useState<string | null>(
+    movement?.arrivalDate ? formatDate(movement.arrivalDate) : null
+  );
+  const [pickupDate, setPickupDate] = useState<string | null>(
+    movement?.pickupDate ? formatDate(movement.pickupDate) : null
+  );
+  const [deliveryDate, setDeliveryDate] = useState<string | null>(
+    movement?.deliveryDate ? formatDate(movement.deliveryDate) : null
+  );
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -116,13 +126,10 @@ export default function StockMovementForm({
     const form = e.target as typeof e.target & {
       quantity: { value: string };
       notes: { value: string };
-      arrivalDate?: { value: string };
       order?: { value: string };
       bol?: { value: string };
       pickupBy?: { value: string };
-      pickupDate?: { value: string };
       deliveryCompany?: { value: string };
-      deliveryDate?: { value: string };
       sku?: { value: string };
     };
 
@@ -131,13 +138,13 @@ export default function StockMovementForm({
       type,
       quantity: parseInt(form.quantity.value),
       notes: form.notes.value,
-      arrivalDate: form.arrivalDate?.value,
+      arrivalDate: arrivalDate || undefined,
       order: form.order?.value,
       bol: form.bol?.value,
       pickupBy: form.pickupBy?.value,
-      pickupDate: form.pickupDate?.value,
+      pickupDate: pickupDate || undefined,
       deliveryCompany: form.deliveryCompany?.value,
-      deliveryDate: form.deliveryDate?.value,
+      deliveryDate: deliveryDate || undefined,
       sku: form.sku?.value,
     });
   };
@@ -253,12 +260,11 @@ export default function StockMovementForm({
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Arrival Date
             </label>
-            <input
-              type="date"
-              name="arrivalDate"
+            <DatePickerCalendar
+              value={arrivalDate}
+              onChange={setArrivalDate}
+              placeholder="Select arrival date"
               required
-              defaultValue={formatDate(movement?.arrivalDate)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>
           <div>
@@ -304,12 +310,11 @@ export default function StockMovementForm({
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Delivery Date
             </label>
-            <input
-              type="date"
-              name="deliveryDate"
+            <DatePickerCalendar
+              value={deliveryDate}
+              onChange={setDeliveryDate}
+              placeholder="Select delivery date"
               required
-              defaultValue={formatDate(movement?.deliveryDate)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>
           <div>
@@ -345,12 +350,11 @@ export default function StockMovementForm({
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Pick Up Date
             </label>
-            <input
-              type="date"
-              name="pickupDate"
+            <DatePickerCalendar
+              value={pickupDate}
+              onChange={setPickupDate}
+              placeholder="Select pickup date"
               required
-              defaultValue={formatDate(movement?.pickupDate)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
           </div>
           <div>

@@ -15,7 +15,7 @@ export default function Table<T extends Record<string, unknown>>({
     <div className="overflow-x-auto flex-1 flex flex-col max-h-full">
       <table className="w-full text-left border-collapse min-w-[800px]">
         <thead>
-          <tr className="bg-white border-b border-gray-200">
+          <tr className="bg-white border-b border-gray-400">
             {columns.map((col) => (
               <th
                 key={String(col.key)}

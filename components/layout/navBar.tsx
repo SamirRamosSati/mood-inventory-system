@@ -111,7 +111,7 @@ export default function Navbar() {
       <div className="px-4 md:px-10 py-4 md:py-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="w-1 h-10 bg-gradient-to-b from-[#DFCDC1] to-[#C8A893] rounded-full"></div>
+            <div className="w-1 h-10 bg-linear-to-b from-[#DFCDC1] to-[#C8A893] rounded-full"></div>
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
                 {currentTitle}

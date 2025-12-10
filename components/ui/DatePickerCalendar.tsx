@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useTransition } from "react";
 import { createPortal } from "react-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -25,22 +25,20 @@ export default function DatePickerCalendar({
   const [calendarValue, setCalendarValue] = useState<Date | null>(null);
   const [portalPosition, setPortalPosition] = useState({ top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
+  const [, startTransition] = useTransition();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    startTransition(() => setMounted(true));
   }, []);
 
-  // Sincronizar calendarValue com value prop
   useEffect(() => {
-    if (value) {
-      const date = new Date(value + "T00:00:00");
+    startTransition(() => {
+      const date = value ? new Date(value + "T00:00:00") : null;
       setCalendarValue(date);
-    } else {
-      setCalendarValue(null);
-    }
+    });
   }, [value]);
 
   useEffect(() => {
@@ -65,13 +63,12 @@ export default function DatePickerCalendar({
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      const calendarHeight = 350; // Altura aproximada do calendário
+      const calendarHeight = 350;
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
 
       let top = rect.bottom + window.scrollY + 8;
 
-      // Se não houver espaço abaixo, mostrar acima
       if (spaceBelow < calendarHeight && spaceAbove > calendarHeight) {
         top = rect.top + window.scrollY - calendarHeight - 8;
       }
@@ -83,10 +80,17 @@ export default function DatePickerCalendar({
     }
   }, [isOpen]);
 
-  const handleCalendarChange = (date: any) => {
+  const handleCalendarChange = (selectedDate: Date | Date[] | null) => {
+    let date: Date | null = null;
+
+    if (Array.isArray(selectedDate)) {
+      date = selectedDate[0] || null;
+    } else if (selectedDate instanceof Date) {
+      date = selectedDate;
+    }
+
     if (date instanceof Date) {
       setCalendarValue(date);
-      // Formato YYYY-MM-DD sem conversão de timezone
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
@@ -127,7 +131,6 @@ export default function DatePickerCalendar({
         />
       </button>
 
-      {/* Hidden input for form submission */}
       <input
         type="hidden"
         value={value || ""}
@@ -140,7 +143,7 @@ export default function DatePickerCalendar({
         createPortal(
           <div
             ref={calendarRef}
-            className="fixed bg-white border border-gray-200 rounded-2xl shadow-2xl z-[9999] p-3"
+            className="fixed bg-white border border-gray-200 rounded-2xl shadow-2xl z-9999 p-3"
             style={{
               top: `${portalPosition.top}px`,
               left: `${portalPosition.left}px`,
@@ -148,7 +151,12 @@ export default function DatePickerCalendar({
             }}
           >
             <Calendar
-              onChange={handleCalendarChange}
+              onChange={
+                handleCalendarChange as unknown as (
+                  value: unknown,
+                  event: unknown
+                ) => void
+              }
               value={calendarValue}
               className="react-calendar-custom"
             />

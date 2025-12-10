@@ -44,7 +44,7 @@ export default function StaffTable({
     <div className="overflow-x-auto">
       <table className="min-w-full">
         <thead>
-          <tr className="border-b border-gray-200">
+          <tr className="border-b border-gray-400">
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900">
               Name
             </th>

@@ -38,12 +38,29 @@ export async function PUT(
       );
     }
 
-    // Check if user owns this delivery
-    if (delivery.userId !== user.id) {
+    // Check if user has manager or owner role from StaffProfile
+    const { data: userProfile, error: userError } = await adminClient
+      .from("StaffProfile")
+      .select("user_id, function")
+      .eq("user_id", user.id)
+      .single();
+
+    if (userError || !userProfile) {
+      return NextResponse.json<ApiResponse>(
+        { success: false, error: "User profile not found" },
+        { status: 404 }
+      );
+    }
+
+    if (
+      userProfile.function !== "Manager" &&
+      userProfile.function !== "Owner"
+    ) {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          error: "You don't have permission to update this delivery",
+          error:
+            "You don't have permission to mark deliveries as paid. Only managers and owners can do this.",
         },
         { status: 403 }
       );

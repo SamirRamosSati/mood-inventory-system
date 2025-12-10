@@ -38,17 +38,6 @@ export async function PUT(
       );
     }
 
-    // Check if user owns this delivery
-    if (delivery.userId !== user.id) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          error: "You don't have permission to update this delivery",
-        },
-        { status: 403 }
-      );
-    }
-
     // Update delivery status to completed
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")

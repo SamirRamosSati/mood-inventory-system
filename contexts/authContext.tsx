@@ -56,7 +56,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription?.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -74,14 +73,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!data.success) {
         setUser(null);
         setIsAdmin(false);
-        return false; // login falhou
+        return false;
       }
 
       setUser(data.data.user);
       setIsAdmin(data.data.isAdmin);
 
       router.push(data.data.isAdmin ? "/dashboard" : "/dashboard");
-      return true; // login sucesso
+      return true;
     } catch (err) {
       console.error("Login error:", err);
       setUser(null);

@@ -24,10 +24,10 @@ export async function DELETE(
       );
     }
 
-    // Verify the delivery exists and belongs to the user
+    // Verify the delivery exists
     const { data: delivery, error: fetchError } = await adminClient
       .from("deliveries")
-      .select("userId")
+      .select("*")
       .eq("id", id)
       .single();
 
@@ -35,17 +35,6 @@ export async function DELETE(
       return NextResponse.json<ApiResponse>(
         { success: false, error: "Delivery not found" },
         { status: 404 }
-      );
-    }
-
-    // Check if user owns this delivery
-    if (delivery.userId !== user.id) {
-      return NextResponse.json<ApiResponse>(
-        {
-          success: false,
-          error: "You don't have permission to delete this delivery",
-        },
-        { status: 403 }
       );
     }
 

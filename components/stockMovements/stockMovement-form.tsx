@@ -248,6 +248,7 @@ export default function StockMovementForm({
         <input
           type="number"
           name="quantity"
+          placeholder="Enter quantity"
           required
           defaultValue={movement?.quantity || 0}
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
@@ -274,6 +275,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="order"
+              placeholder="Enter order number"
               defaultValue={movement?.order || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
@@ -285,6 +287,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="bol"
+              placeholder="Enter BOL number"
               defaultValue={movement?.bol || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
             />
@@ -301,6 +304,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="deliveryCompany"
+              placeholder="Enter delivery company"
               required
               defaultValue={movement?.deliveryCompany || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
@@ -324,6 +328,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="order"
+              placeholder="Enter order number"
               required
               defaultValue={movement?.order || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
@@ -341,6 +346,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="pickupBy"
+              placeholder="Enter name of person picking up"
               required
               defaultValue={movement?.pickupBy || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"
@@ -364,6 +370,7 @@ export default function StockMovementForm({
             <input
               type="text"
               name="order"
+              placeholder="Enter order number"
               required
               defaultValue={movement?.order || ""}
               className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] transition"

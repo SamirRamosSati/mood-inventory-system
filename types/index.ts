@@ -42,6 +42,7 @@ export interface Product extends Record<string, unknown> {
   id: string;
   name: string;
   sku: string;
+  code?: string | null;
   description?: string | null;
   category?: string | null;
   brand?: string | null;
@@ -117,7 +118,6 @@ export interface MovementFormData {
   customerName?: string;
 }
 
-// Delivery Item type
 export interface DeliveryItem {
   product_id: string;
   product_name?: string;
@@ -125,7 +125,6 @@ export interface DeliveryItem {
   sku?: string;
 }
 
-// Delivery types
 export interface Delivery {
   id: string;
   userId: string;
@@ -153,7 +152,6 @@ export interface UpdateDeliveryData extends Partial<CreateDeliveryData> {
   scheduled_date?: string | null;
 }
 
-// Notification types
 export interface Notification {
   id: string;
   user_id: string;

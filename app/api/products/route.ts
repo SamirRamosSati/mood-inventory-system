@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     if (response) return response;
 
     const body = await request.json();
-    const { name, sku, category, brand } = body;
+    const { name, sku, code, category, brand } = body;
 
     if (!name || !sku) {
       return NextResponse.json(
@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
       .insert({
         name,
         sku,
+        code: code || null,
         category: category || null,
         brand,
         stock: 0,
@@ -108,7 +109,7 @@ export async function PUT(request: NextRequest) {
     if (response) return response;
 
     const body = await request.json();
-    const { id, name, sku, category, brand } = body;
+    const { id, name, sku, code, category, brand } = body;
 
     if (!id || !name || !sku) {
       return NextResponse.json(
@@ -123,6 +124,7 @@ export async function PUT(request: NextRequest) {
       .update({
         name,
         sku,
+        code: code || null,
         category: category || null,
         brand,
       })

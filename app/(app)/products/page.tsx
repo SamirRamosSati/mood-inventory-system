@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 interface ProductFormData {
   name: string;
   sku: string;
+  code?: string | null;
   category: string | null;
   brand: string | null;
 }
@@ -201,6 +202,7 @@ export default function ProductsPage() {
   const columns = [
     { key: "name", label: "Name" },
     { key: "sku", label: "SKU" },
+    { key: "code", label: "Code" },
     { key: "category", label: "Category" },
     { key: "stock", label: "Stock" },
     { key: "brand", label: "Brand" },

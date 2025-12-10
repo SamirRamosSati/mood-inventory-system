@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 interface ProductFormData {
   name: string;
   sku: string;
+  code?: string | null;
   category: string | null;
   brand: string | null;
 }
@@ -108,6 +109,9 @@ export default function ProductForm({
     const payload: ProductFormData = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value.trim(),
       sku: (form.elements.namedItem("sku") as HTMLInputElement).value.trim(),
+      code:
+        (form.elements.namedItem("code") as HTMLInputElement)?.value.trim() ||
+        null,
       category: categorySearch.trim() || null,
       brand: brandSearch.trim() || null,
     };
@@ -124,9 +128,10 @@ export default function ProductForm({
         <input
           type="text"
           name="name"
+          placeholder="Enter product name"
           defaultValue={product?.name || ""}
           required
-          className="w-full px-4 py-3 bg-gray-50 border placeholder:text-sm border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+          className="w-full px-4 py-3 bg-gray-50 border  border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
         />
       </div>
 
@@ -137,8 +142,22 @@ export default function ProductForm({
         <input
           type="text"
           name="sku"
+          placeholder="Enter product SKU"
           defaultValue={product?.sku || ""}
           required
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Code
+        </label>
+        <input
+          type="text"
+          name="code"
+          placeholder="Enter product code "
+          defaultValue={(product as Product)?.code || ""}
           className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
         />
       </div>

@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/authContext";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
+  const router = useRouter();
   const { login, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +25,10 @@ export default function LoginPage() {
 
     if (success) {
       toast.success("Login successful!");
+      // Redirect after a short delay to allow toast to display
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
     } else {
       toast.error("Invalid credentials");
     }

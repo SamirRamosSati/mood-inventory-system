@@ -47,7 +47,7 @@ export default function DeliveriesTable({
     <div className="overflow-x-auto flex-1 flex flex-col">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-white border-b border-gray-400">
+          <tr className="bg-white border-b border-gray-200">
             <th className="p-3 text-sm font-semibold text-gray-900">
               Customer
             </th>

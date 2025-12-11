@@ -6,7 +6,6 @@ const adminClient = createAdminClient();
 
 export async function GET() {
   try {
-    // Get all staff profiles
     const { data: allStaff, error: allError } = await adminClient
       .from("StaffProfile")
       .select("*");

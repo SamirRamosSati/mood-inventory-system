@@ -95,7 +95,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create delivery
     const { data: delivery, error: deliveryError } = await adminClient
       .from("deliveries")
       .insert({
@@ -121,7 +120,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get all Warehouse Workers and create notifications
     const { data: warehouseWorkers, error: fetchError } = await adminClient
       .from("StaffProfile")
       .select("user_id")

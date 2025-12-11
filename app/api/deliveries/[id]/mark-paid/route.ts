@@ -24,7 +24,6 @@ export async function PUT(
       );
     }
 
-    // Get the delivery first
     const { data: delivery, error: fetchError } = await adminClient
       .from("deliveries")
       .select("*")
@@ -38,7 +37,6 @@ export async function PUT(
       );
     }
 
-    // Check if user has manager or owner role from StaffProfile
     const { data: userProfile, error: userError } = await adminClient
       .from("StaffProfile")
       .select("user_id, function")
@@ -66,7 +64,6 @@ export async function PUT(
       );
     }
 
-    // Update delivery status to paid
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
       .update({
@@ -85,7 +82,6 @@ export async function PUT(
       );
     }
 
-    // Get all users and create notifications
     const { data: allUsers, error: fetchUsersError } = await adminClient
       .from("StaffProfile")
       .select("user_id");

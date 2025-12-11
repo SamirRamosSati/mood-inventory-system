@@ -24,7 +24,6 @@ export async function PUT(
       );
     }
 
-    // Update notification as read
     const { data: updatedNotification, error: updateError } = await adminClient
       .from("notifications")
       .update({
@@ -79,7 +78,6 @@ export async function DELETE(
       );
     }
 
-    // Delete notification
     const { error: deleteError } = await adminClient
       .from("notifications")
       .delete()

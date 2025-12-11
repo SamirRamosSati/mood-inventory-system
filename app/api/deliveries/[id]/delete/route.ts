@@ -24,7 +24,6 @@ export async function DELETE(
       );
     }
 
-    // Verify the delivery exists
     const { data: delivery, error: fetchError } = await adminClient
       .from("deliveries")
       .select("*")
@@ -38,7 +37,6 @@ export async function DELETE(
       );
     }
 
-    // Delete the delivery
     const { error: deleteError } = await adminClient
       .from("deliveries")
       .delete()

@@ -24,7 +24,6 @@ export async function PUT(
       );
     }
 
-    // Get the delivery first
     const { data: delivery, error: fetchError } = await adminClient
       .from("deliveries")
       .select("*")
@@ -38,7 +37,6 @@ export async function PUT(
       );
     }
 
-    // Update delivery status to completed
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
       .update({
@@ -58,7 +56,6 @@ export async function PUT(
       );
     }
 
-    // Get all Managers and create notifications
     const { data: managers, error: fetchManagersError } = await adminClient
       .from("StaffProfile")
       .select("user_id")

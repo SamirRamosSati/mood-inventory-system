@@ -33,7 +33,6 @@ export async function PUT(req: NextRequest) {
         );
       }
 
-      // Update email in auth.users
       const { error: authError } = await adminClient.auth.admin.updateUserById(
         user.id,
         { email }
@@ -48,7 +47,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Update users table
     const { error: updateError } = await adminClient
       .from("users")
       .update({

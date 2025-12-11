@@ -13,7 +13,6 @@ export async function POST(req: Request) {
       return Response.json({ error: "Token is required" }, { status: 400 });
     }
 
-    // Fetch the token from password_resets table
     const { data: reset, error: fetchError } = await supabase
       .from("password_resets")
       .select("*")
@@ -28,7 +27,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if token is expired
     const now = new Date();
     const expiresAt = new Date(reset.expires_at);
 

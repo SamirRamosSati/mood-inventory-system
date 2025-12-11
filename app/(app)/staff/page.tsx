@@ -164,7 +164,6 @@ export default function StaffPage() {
           return;
         }
 
-        // Fetch updated employees to get latest avatar colors and data
         const fetchResponse = await fetch("/api/staff");
         const fetchData = await fetchResponse.json();
         if (fetchData.success && fetchData.data) {
@@ -175,7 +174,6 @@ export default function StaffPage() {
         setIsModalOpen(false);
         toast.success(result.message || "Employee updated successfully");
       } else {
-        // Send invite
         const response = await fetch("/api/staff/invite", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

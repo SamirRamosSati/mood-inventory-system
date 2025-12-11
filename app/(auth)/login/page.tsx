@@ -25,7 +25,6 @@ export default function LoginPage() {
 
     if (success) {
       toast.success("Login successful!");
-      // Redirect after a short delay to allow toast to display
       setTimeout(() => {
         router.push("/dashboard");
       }, 500);

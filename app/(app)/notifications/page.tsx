@@ -57,7 +57,6 @@ export default function NotificationsPage() {
         return;
       }
 
-      // Update local state
       setNotifications((prev) =>
         prev.map((notif) =>
           notif.id === id
@@ -147,7 +146,6 @@ export default function NotificationsPage() {
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
       <Card>
         <div className="flex flex-col h-full gap-4">
-          {/* Header with filters */}
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
             <div className="flex gap-2">
@@ -189,7 +187,6 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          {/* Notifications list */}
           <div className="bg-white rounded-2xl border border-gray-100 flex-1 overflow-auto">
             {loading ? (
               <div className="flex items-center justify-center flex-1 gap-2 text-gray-600">
@@ -210,12 +207,10 @@ export default function NotificationsPage() {
                       !notification.read_at && "bg-blue-50"
                     )}
                   >
-                    {/* Unread indicator */}
                     {!notification.read_at && (
                       <div className="w-2 h-2 rounded-full bg-blue-600 mt-2 shrink-0" />
                     )}
 
-                    {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900">
                         {notification.title}
@@ -237,7 +232,6 @@ export default function NotificationsPage() {
                       </span>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex gap-2 shrink-0">
                       {!notification.read_at && (
                         <button

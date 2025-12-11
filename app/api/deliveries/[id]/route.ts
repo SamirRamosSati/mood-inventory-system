@@ -26,7 +26,6 @@ export async function PUT(
     const body: UpdateDeliveryData = await request.json();
     const { id } = await params;
 
-    // Verify the delivery exists and belongs to the user
     const { data: delivery, error: fetchError } = await adminClient
       .from("deliveries")
       .select("userId")
@@ -40,7 +39,6 @@ export async function PUT(
       );
     }
 
-    // Check if user owns this delivery
     if (delivery.userId !== user.id) {
       return NextResponse.json<ApiResponse>(
         {
@@ -51,7 +49,6 @@ export async function PUT(
       );
     }
 
-    // Build update object with only provided fields
     const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     };
@@ -72,7 +69,6 @@ export async function PUT(
       updateData.items = body.items;
     }
 
-    // Update delivery
     const { data: updatedDelivery, error: updateError } = await adminClient
       .from("deliveries")
       .update(updateData)

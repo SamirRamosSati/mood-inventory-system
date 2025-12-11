@@ -27,7 +27,6 @@ export default function DeliveryItemsInput({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -44,7 +43,6 @@ export default function DeliveryItemsInput({
     fetchProducts();
   }, []);
 
-  // Filter products based on search term
   const filteredProductsList = useMemo(() => {
     if (searchTerm.trim() === "") {
       return [];
@@ -54,7 +52,6 @@ export default function DeliveryItemsInput({
       const alreadySelected = items.some((item) => item.product_id === p.id);
       if (alreadySelected) return false;
 
-      // Don't show products with no stock
       if (p.stock <= 0) return false;
 
       const term = searchTerm.toLowerCase();
@@ -67,7 +64,6 @@ export default function DeliveryItemsInput({
     return filtered;
   }, [searchTerm, products, items]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -115,7 +111,6 @@ export default function DeliveryItemsInput({
         Products
       </label>
 
-      {/* Items List */}
       <div className="space-y-2">
         {items.length === 0 ? (
           <p className="text-sm text-gray-500 italic">No items added yet</p>
@@ -159,7 +154,6 @@ export default function DeliveryItemsInput({
         )}
       </div>
 
-      {/* Search Input */}
       <div className="relative" ref={dropdownRef}>
         <div className="relative">
           <Search size={16} className="absolute left-3 top-3 text-gray-400" />
@@ -177,7 +171,6 @@ export default function DeliveryItemsInput({
           />
         </div>
 
-        {/* Dropdown */}
         {showDropdown && filteredProductsList.length > 0 && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
             {filteredProductsList.map((product) => (

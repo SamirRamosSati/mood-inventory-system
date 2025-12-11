@@ -94,7 +94,6 @@ export default function AccountPage() {
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full overflow-hidden">
       <Card>
         <div className="p-6 space-y-6 overflow-y-auto max-h-full">
-          {/* Header */}
           <div className="flex items-center gap-6 pb-6 border-b border-gray-200">
             <div
               className={`w-24 h-24 rounded-full ${selectedColor} flex items-center justify-center text-white text-3xl font-bold shadow-lg`}
@@ -112,7 +111,6 @@ export default function AccountPage() {
             </div>
           </div>
 
-          {/* Profile Info */}
           <div className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -140,7 +138,6 @@ export default function AccountPage() {
               />
             </div>
 
-            {/* Avatar Color Picker */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Profile Color
@@ -184,7 +181,6 @@ export default function AccountPage() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
             <button
               type="button"

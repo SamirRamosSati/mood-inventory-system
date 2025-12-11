@@ -16,7 +16,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fetch the token from password_resets table
     const { data: reset, error: fetchError } = await supabase
       .from("password_resets")
       .select("*")
@@ -31,7 +30,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if token is expired
     const now = new Date();
     const expiresAt = new Date(reset.expires_at);
 
@@ -42,7 +40,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Update password in auth.users
     const adminClient = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -61,7 +58,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Mark token as used
     const { error: updateUsedError } = await supabase
       .from("password_resets")
       .update({ used_at: new Date().toISOString() })

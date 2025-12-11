@@ -31,7 +31,6 @@ export default function DeliveriesPage() {
 
   const PAGE_SIZE = 8;
 
-  // Fetch deliveries
   useEffect(() => {
     const fetchDeliveries = async () => {
       setLoading(true);
@@ -59,12 +58,10 @@ export default function DeliveriesPage() {
     fetchDeliveries();
   }, [activeTab, search]);
 
-  // Filtrar por aba (status)
   const filtered = useMemo(() => {
     return deliveries;
   }, [deliveries]);
 
-  // Paginar
   const paginated = useMemo(() => {
     return filtered.slice(
       currentPage * PAGE_SIZE,
@@ -123,7 +120,6 @@ export default function DeliveriesPage() {
 
     try {
       if (editingDelivery) {
-        // Update delivery
         const response = await fetch(`/api/deliveries/${editingDelivery.id}`, {
           method: "PUT",
           headers: {
@@ -180,7 +176,6 @@ export default function DeliveriesPage() {
     <div className="p-2 md:p-6 space-y-6 flex flex-col h-full">
       <Card>
         <div className="flex flex-col h-full gap-4">
-          {/* Tabs */}
           <TabsPrimitive.Root
             value={activeTab}
             onValueChange={handleTabChange}
@@ -228,7 +223,6 @@ export default function DeliveriesPage() {
               <AddButton label="Add Delivery" onClick={handleAddDelivery} />
             </div>
 
-            {/* Search */}
             <div className="flex gap-2">
               <SearchBar
                 onSearch={setSearch}
@@ -239,7 +233,6 @@ export default function DeliveriesPage() {
               </span>
             </div>
 
-            {/* Table */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1 overflow-auto">
               {loading ? (
                 <div className="flex items-center justify-center gap-2 text-gray-600 h-full">
@@ -260,7 +253,6 @@ export default function DeliveriesPage() {
               )}
             </div>
 
-            {/* Pagination - inside Card */}
             {!loading && paginated.length > 0 && (
               <PaginationControls
                 currentPage={currentPage}
@@ -272,7 +264,6 @@ export default function DeliveriesPage() {
         </div>
       </Card>
 
-      {/* Modal */}
       <Modal
         isOpen={modalOpen}
         onClose={() => {

@@ -326,19 +326,24 @@ export default function StockMovementsPage() {
             );
 
             return (
-              !isLoading &&
-              filtered.length > 0 && (
-                <PaginationControls
-                  currentPage={page}
-                  totalPages={totalPages}
-                  onPageChange={(newPage) => {
-                    setPageByType((prev) => ({
-                      ...prev,
-                      [activeTab]: newPage,
-                    }));
-                  }}
-                />
-              )
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-500 font-medium">
+                  Items found: {filtered.length}
+                </div>
+
+                {!isLoading && filtered.length > 0 && (
+                  <PaginationControls
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={(newPage) => {
+                      setPageByType((prev) => ({
+                        ...prev,
+                        [activeTab]: newPage,
+                      }));
+                    }}
+                  />
+                )}
+              </div>
             );
           })()}
         </div>

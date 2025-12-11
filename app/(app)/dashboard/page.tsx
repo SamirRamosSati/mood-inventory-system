@@ -51,7 +51,7 @@ export default function DashboardPage() {
             ...prev,
             totalProducts: dataProducts.data!.length,
             lowStock: dataProducts.data!.filter(
-              (product: Product) => product.stock <= 3
+              (product: Product) => product.stock <= 1
             ).length,
           }));
         } else {
@@ -62,7 +62,6 @@ export default function DashboardPage() {
         const dataMovements: ApiResponse<MovementWithRelations[]> =
           await resMovements.json();
 
-        // Fetch deliveries
         const resDeliveries = await fetch(
           "/api/deliveries?status=pending&pageSize=100"
         );

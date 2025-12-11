@@ -4,11 +4,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type { ApiResponse, UserSession } from "@/types";
 
 export async function POST(request: NextRequest) {
-  console.log("🔐 Login API called");
+  console.log("Login API called");
 
   try {
     const body = await request.json();
-    console.log("📧 Login attempt:", body.email);
+    console.log(" Login attempt:", body.email);
 
     const { email, password } = body;
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       });
 
     if (authError) {
-      console.log("❌ Supabase auth error:", authError.message);
+      console.log(" Supabase auth error:", authError.message);
       return NextResponse.json<ApiResponse>(
         { success: false, error: authError.message },
         { status: 401 }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (userError || !user) {
-      console.log("❌ User not found in database:", userError);
+      console.log("User not found in database:", userError);
       return NextResponse.json<ApiResponse>(
         { success: false, error: "User not found in system" },
         { status: 404 }
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       isAdmin: String(user.role || "").toLowerCase() === "admin",
     };
 
-    console.log("✅ Login successful:", user.email);
+    console.log("Login successful:", user.email);
     return NextResponse.json<ApiResponse<UserSession>>(
       { success: true, data: sessionData },
       { status: 200 }

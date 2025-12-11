@@ -264,6 +264,9 @@ export default function ProductsPage() {
               }}
             />
           </div>
+          <div className="text-sm text-gray-500 font-medium">
+            Items found: {filtered.length}
+          </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-4 min-h-20 flex-1 overflow-auto">
             {loading ? (
               <div className="flex items-center justify-center flex-1">

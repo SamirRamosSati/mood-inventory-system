@@ -200,22 +200,57 @@ export default function ProductsPage() {
     (currentPage + 1) * PAGE_SIZE
   );
 
+  const CELL_CLASS = "inline-block max-w-[220px] whitespace-normal break-words leading-snug";
+  const LOCATION_CLASS = "inline-block min-w-[88px] max-w-[160px] whitespace-normal break-words leading-snug";
+
   const columns = [
-    { key: "name", label: "Name" },
-    { key: "sku", label: "SKU" },
-    { key: "code", label: "Code" },
-    { key: "category", label: "Category" },
+    {
+      key: "name",
+      label: "Name",
+      render: (item: Product) => (
+        <span className={CELL_CLASS}>
+          {item.name}
+        </span>
+      ),
+    },
+    {
+      key: "sku",
+      label: "SKU",
+      render: (item: Product) => (
+        <span className={CELL_CLASS}>{item.sku}</span>
+      ),
+    },
+    {
+      key: "code",
+      label: "Code",
+      render: (item: Product) => (
+        <span className={CELL_CLASS}>{item.code ?? ""}</span>
+      ),
+    },
+    {
+      key: "category",
+      label: "Category",
+      render: (item: Product) => (
+        <span className={CELL_CLASS}>{item.category ?? ""}</span>
+      ),
+    },
     {
       key: "location",
       label: "Location",
       render: (item: Product) => (
-        <span className="inline-block min-w-[88px]">
+        <span className={LOCATION_CLASS}>
           {item.location ?? ""}
         </span>
       ),
     },
     { key: "stock", label: "Stock" },
-    { key: "brand", label: "Brand" },
+    {
+      key: "brand",
+      label: "Brand",
+      render: (item: Product) => (
+        <span className={CELL_CLASS}>{item.brand ?? ""}</span>
+      ),
+    },
     {
       key: "actions",
       label: "Actions",

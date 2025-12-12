@@ -22,6 +22,7 @@ interface ProductFormData {
   code?: string | null;
   category: string | null;
   brand: string | null;
+  location?: string | null;
 }
 
 export default function ProductsPage() {
@@ -204,6 +205,15 @@ export default function ProductsPage() {
     { key: "sku", label: "SKU" },
     { key: "code", label: "Code" },
     { key: "category", label: "Category" },
+    {
+      key: "location",
+      label: "Location",
+      render: (item: Product) => (
+        <span className="inline-block min-w-[88px]">
+          {item.location ?? ""}
+        </span>
+      ),
+    },
     { key: "stock", label: "Stock" },
     { key: "brand", label: "Brand" },
     {

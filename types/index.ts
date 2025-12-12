@@ -46,6 +46,7 @@ export interface Product extends Record<string, unknown> {
   description?: string | null;
   category?: string | null;
   brand?: string | null;
+  location?: string | null;
   stock: number;
   createdAt: string;
   updatedAt: string;
@@ -69,6 +70,7 @@ export interface ProductFormData {
   sku: string;
   category?: string | null;
   brand?: string | null;
+  location?: string | null;
 }
 
 // Movement type
@@ -215,6 +217,7 @@ export interface ProductFormData {
   sku: string;
   category?: string | null;
   brand?: string | null;
+  location?: string | null;
 }
 
 export interface MovementFormData {

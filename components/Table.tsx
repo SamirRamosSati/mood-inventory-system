@@ -12,7 +12,7 @@ export default function Table<T extends Record<string, unknown>>({
   data,
 }: TableProps<T>) {
   return (
-    <div className="overflow-x-auto flex-1 flex flex-col max-h-full">
+    <div className="overflow-x-auto flex-1 flex flex-col max-h-full w-full touch-pan-x">
       <table className="w-full text-left border-collapse min-w-[800px]">
         <thead>
           <tr className="bg-white border-b border-gray-200">

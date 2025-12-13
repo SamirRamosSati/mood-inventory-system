@@ -24,10 +24,7 @@ export default function LoginPage() {
     const success = await login(email, password);
 
     if (success) {
-      toast.success("Login successful!");
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500);
+      router.push("/dashboard");
     } else {
       toast.error("Invalid credentials");
     }

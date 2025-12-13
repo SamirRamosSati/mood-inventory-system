@@ -135,6 +135,8 @@ export interface Delivery {
   customer_phone: string;
   delivery_address: string;
   scheduled_date: string | null;
+  order?: string | null;
+  notes?: string | null;
   items: DeliveryItem[];
   status: "pending" | "completed" | "paid";
   completed_at: string | null;
@@ -147,11 +149,15 @@ export interface CreateDeliveryData {
   customer_phone: string;
   delivery_address: string;
   scheduled_date?: string | null;
+  order?: string | null;
+  notes?: string | null;
   items: DeliveryItem[];
 }
 
 export interface UpdateDeliveryData extends Partial<CreateDeliveryData> {
   scheduled_date?: string | null;
+  order?: string | null;
+  notes?: string | null;
 }
 
 export interface Notification {

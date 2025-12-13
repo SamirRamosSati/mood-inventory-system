@@ -28,6 +28,8 @@ export default function DeliveryForm({
   const [scheduledDate, setScheduledDate] = useState<string | null>(
     delivery?.scheduled_date || null
   );
+  const [order, setOrder] = useState<string>(delivery?.order || "");
+  const [notes, setNotes] = useState<string>(delivery?.notes || "");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,6 +53,8 @@ export default function DeliveryForm({
         form.elements.namedItem("delivery_address") as HTMLInputElement
       ).value.trim(),
       scheduled_date: isDateTBA ? null : scheduledDate,
+      order: order.trim() || undefined,
+      notes: notes.trim() || undefined,
       items,
     };
 
@@ -130,6 +134,32 @@ export default function DeliveryForm({
             />
           </div>
         )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Order Number (Optional)
+        </label>
+        <input
+          type="text"
+          value={order}
+          onChange={(e) => setOrder(e.target.value)}
+          placeholder="Enter order number"
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-900 mb-2">
+          Notes (Optional)
+        </label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Enter additional notes"
+          rows={3}
+          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#DFCDC1] focus:border-transparent transition"
+        />
       </div>
 
       {/* Items Input */}

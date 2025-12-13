@@ -104,6 +104,8 @@ export async function POST(request: NextRequest) {
         customer_phone: body.customer_phone,
         delivery_address: body.delivery_address,
         scheduled_date: body.scheduled_date || null,
+        order: body.order || null,
+        notes: body.notes || null,
         items: body.items || [],
         status: "pending",
         created_at: new Date().toISOString(),

@@ -65,6 +65,12 @@ export async function PUT(
     if (body.scheduled_date !== undefined) {
       updateData.scheduled_date = body.scheduled_date;
     }
+    if (body.order !== undefined) {
+      updateData.order = body.order;
+    }
+    if (body.notes !== undefined) {
+      updateData.notes = body.notes;
+    }
     if (body.items !== undefined) {
       updateData.items = body.items;
     }

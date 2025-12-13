@@ -44,29 +44,31 @@ export default function DeliveriesTable({
   };
 
   return (
-    <div className="overflow-x-auto flex-1 flex flex-col">
-      <table className="w-full text-left border-collapse">
+    <div className="overflow-x-auto flex-1 flex flex-col max-h-full w-full touch-pan-x">
+      <table className="w-full text-left border-collapse min-w-[900px]">
         <thead>
           <tr className="bg-white border-b border-gray-200">
-            <th className="p-3 text-sm font-semibold text-gray-900">
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[150px]">
               Customer
             </th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Phone</th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Address</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[120px]">Phone</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[180px]">Address</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[100px]">Order</th>
             {status !== "completed" && (
-              <th className="p-3 text-sm font-semibold text-gray-900">Date</th>
+              <th className="p-3 text-sm font-semibold text-gray-900 min-w-[100px]">Date</th>
             )}
             {status === "completed" && (
-              <th className="p-3 text-sm font-semibold text-gray-900">
+              <th className="p-3 text-sm font-semibold text-gray-900 min-w-[120px]">
                 Completed At
               </th>
             )}
-            <th className="p-3 text-sm font-semibold text-gray-900">Items</th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Status</th>
-            <th className="p-3 text-sm font-semibold text-gray-900">
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[150px]">Items</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[150px]">Notes</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[100px]">Status</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[120px]">
               Created by
             </th>
-            <th className="p-3 text-sm font-semibold text-gray-900">Action</th>
+            <th className="p-3 text-sm font-semibold text-gray-900 min-w-[80px]">Action</th>
           </tr>
         </thead>
 
@@ -84,6 +86,9 @@ export default function DeliveriesTable({
               </td>
               <td className="p-3 text-sm text-gray-600">
                 {delivery.delivery_address}
+              </td>
+              <td className="p-3 text-sm text-gray-600">
+                {delivery.order || "-"}
               </td>
               {status !== "completed" && (
                 <td className="p-3 text-sm text-gray-600">
@@ -119,6 +124,13 @@ export default function DeliveriesTable({
                     <span className="text-gray-400">No items</span>
                   )}
                 </div>
+              </td>
+              <td className="p-3 text-sm text-gray-600 max-w-xs truncate">
+                {delivery.notes ? (
+                  <span title={delivery.notes}>{delivery.notes}</span>
+                ) : (
+                  <span className="text-gray-400">-</span>
+                )}
               </td>
               <td className="p-3">
                 <span
